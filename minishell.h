@@ -91,7 +91,7 @@ int ft_strplen(char **str);
 char *quote_remover(char *str,int i,int j);
 void quote_check(char *str);
 void pipe_redirect_ba(char *str,int i);
-void redirect_finder(t_shell *cmd,char *str,int i,int type);
-void redirects_filler(t_shell *cmd,char *str,int type,int i);
+void redirect_find_fill(t_shell *cmd,char *str,int i,int type);
+void redirects_filler(t_shell *cmd,char *str,t_rdr *count,int i);
 
 #endif

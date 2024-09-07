@@ -1,5 +1,17 @@
 #include "../minishell.h"
 
+void rdr_makezero(t_rdr *count)
+{
+	count->acwhile = 0;
+	count->icwhile = 0;
+	count->hcwhile = 0;
+	count->ocwhile = 0;
+	count->oc = 0;
+	count->ic = 0;
+	count->ac = 0;
+	count->hc = 0;
+}
+
 void pipe_redirect_ba(char *str,int i)
 {
 	while(str[i])
@@ -75,33 +87,21 @@ int redirect_counter(char *str,int i,int redirectType)
 	}
 	return (count);
 }
-void rdr_makezero(t_rdr *count)
+
+void redirects_filler(t_shell *cmd,char *str,t_rdr *count,int i)
 {
-	count->acwhile = 0;
-	count->icwhile = 0;
-	count->hcwhile = 0;
-	count->ocwhile = 0;
-	count->oc = 0;
-	count->ic = 0;
-	count->ac = 0;
-	count->hc = 0;
-}
-void redirects_filler(t_shell *cmd,char *str,int type,t_rdr *count)
-{
-	int i;
 	int start;
 
-	i = 0;
 	start = i;
-	while(str[i] && (str[i] != '\t' || str[i] != ' '))
+	while((str[i] != ' ' && str[i] != '\t') && str[i])
 		i++;
-	if(count->ic -1 >= 0)
-		cmd->input[count->acwhile++] = ft_substr(str,start,i - start);
-	else if(count->oc -1 >= 0)
+	if(count->ic > count->icwhile)
+		cmd->input[count->icwhile++] = ft_substr(str,start,i - start);
+	else if(count->oc > count->ocwhile)
 		cmd->output[count->ocwhile++] = ft_substr(str,start,i - start);
-	else if(count->ac - 1 >= 0)
+	else if(count->ac > count->acwhile)
 		cmd->append[count->acwhile++] = ft_substr(str,start,i - start);
-	else if(count->hc - 1 >= 0)
+	else if(count->hc > count->hcwhile)
 		cmd->heredoc[count->hcwhile++] = ft_substr(str,start,i - start);
 }
 void redirect_malloc(t_shell *cmd,char *str,t_rdr *rdrc)
@@ -111,21 +111,15 @@ void redirect_malloc(t_shell *cmd,char *str,t_rdr *rdrc)
 	rdrc->ac = redirect_counter(str,0,APPEND);
 	rdrc->hc = redirect_counter(str,0,HEREDOC);
 
-	printf("HEREDOC SAYISI : %d\n", rdrc->hc);
-	printf("INPUT SAYISI : %d\n", rdrc->ic);
-	printf("OUTPUT SAYISI : %d\n", rdrc->oc);
-	printf("APPEND SAYISI : %d\n", rdrc->ac);
-
 	cmd->input = malloc(sizeof(char *) * rdrc->ic + 1);
 	cmd->output = malloc(sizeof(char *) * rdrc->oc+ 1);
 	cmd->heredoc = malloc(sizeof(char *) * rdrc->hc + 1);
 	cmd->append = malloc(sizeof(char *) * rdrc->ac + 1);
 }
-void redirect_finder(t_shell *cmd,char *str,int i,int type)
+void redirect_find_fill(t_shell *cmd,char *str,int i,int type)
 {
 	t_rdr rdrCount;
 
-	printf("test\n");
 	rdr_makezero(&rdrCount);
 	redirect_malloc(cmd,str,&rdrCount);
 	while(str[i])
@@ -140,7 +134,7 @@ void redirect_finder(t_shell *cmd,char *str,int i,int type)
 				i++;
 			while(str[i] == '\t' || str[i] == ' ')
 				i++;
-			redirects_filler(cmd,str,type,i);
+			redirects_filler(cmd,str,&rdrCount,i);
 		}
 		i++;
 	}
@@ -159,7 +153,7 @@ void split_pipe(t_shell *cmd,char *str,int i, int size)
 	{
 		heredoc_append_control(pipe_cmd[i],0);
 		input_output_control(pipe_cmd[i],0);
-		redirect_finder(cmd,pipe_cmd[i],0,0);
+		redirect_find_fill(cmd,pipe_cmd[i],0,0);
 		cmd->next = malloc(sizeof(t_shell));
 		cmd = cmd->next;
 		i++;
