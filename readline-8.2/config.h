@@ -187,7 +187,7 @@
 #define HAVE_PWD_H 1
 
 /* Define if you have the <stdarg.h> header file.  */
-#define HAVE_STDARG_H 1
+/* #undef HAVE_STDARG_H */
 
 /* Define if you have the <stdbool.h> header file.  */
 #define HAVE_STDBOOL_H 1

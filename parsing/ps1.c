@@ -54,22 +54,6 @@ void input_output_control(char *str,int i)
 		i++;
 	}
 }
-void redirects_filler(t_shell *cmd,char *str,int type,int i)
-{
-	int start;
-	static int redirect_count;
-
-	redirect_count = 0;
-	start = i;
-	while(str[i] && (str[i] != '\t' || str[i] != ' '))
-		i++;
-	if(type == INPUT)
-		cmd->input[redirect_count] = ft_substr(str,start,i - start);
-	else if(type == OUTPUT)
-		cmd->output[redirect_count] = ft_substr(str,start,i - start);
-	printf("%s", cmd->input[0]);
-	redirect_count++;
-}
 int redirect_counter(char *str,int i,int redirectType)
 {
 	int count;
@@ -91,22 +75,59 @@ int redirect_counter(char *str,int i,int redirectType)
 	}
 	return (count);
 }
-void redirect_malloc(t_shell *cmd,char *str,int type)
+void rdr_makezero(t_rdr *count)
 {
-	int rcount;
+	count->acwhile = 0;
+	count->icwhile = 0;
+	count->hcwhile = 0;
+	count->ocwhile = 0;
+	count->oc = 0;
+	count->ic = 0;
+	count->ac = 0;
+	count->hc = 0;
+}
+void redirects_filler(t_shell *cmd,char *str,int type,t_rdr *count)
+{
+	int i;
+	int start;
 
-	rcount = redirect_counter(str,0,type);
-	if(type == INPUT)
-		cmd->input = malloc(sizeof(char *) * rcount + 1);
-	else if(type == OUTPUT)
-		cmd->output = malloc(sizeof(char *) * rcount + 1);
-	else if(type == HEREDOC)
-		cmd->heredoc = malloc(sizeof(char *) * rcount + 1);
-	else if(type == APPEND)
-		cmd->append = malloc(sizeof(char *) * rcount + 1);
+	i = 0;
+	start = i;
+	while(str[i] && (str[i] != '\t' || str[i] != ' '))
+		i++;
+	if(count->ic -1 >= 0)
+		cmd->input[count->acwhile++] = ft_substr(str,start,i - start);
+	else if(count->oc -1 >= 0)
+		cmd->output[count->ocwhile++] = ft_substr(str,start,i - start);
+	else if(count->ac - 1 >= 0)
+		cmd->append[count->acwhile++] = ft_substr(str,start,i - start);
+	else if(count->hc - 1 >= 0)
+		cmd->heredoc[count->hcwhile++] = ft_substr(str,start,i - start);
+}
+void redirect_malloc(t_shell *cmd,char *str,t_rdr *rdrc)
+{
+	rdrc->ic = redirect_counter(str,0,INPUT);
+	rdrc->oc = redirect_counter(str,0,OUTPUT);
+	rdrc->ac = redirect_counter(str,0,APPEND);
+	rdrc->hc = redirect_counter(str,0,HEREDOC);
+
+	printf("HEREDOC SAYISI : %d\n", rdrc->hc);
+	printf("INPUT SAYISI : %d\n", rdrc->ic);
+	printf("OUTPUT SAYISI : %d\n", rdrc->oc);
+	printf("APPEND SAYISI : %d\n", rdrc->ac);
+
+	cmd->input = malloc(sizeof(char *) * rdrc->ic + 1);
+	cmd->output = malloc(sizeof(char *) * rdrc->oc+ 1);
+	cmd->heredoc = malloc(sizeof(char *) * rdrc->hc + 1);
+	cmd->append = malloc(sizeof(char *) * rdrc->ac + 1);
 }
 void redirect_finder(t_shell *cmd,char *str,int i,int type)
 {
+	t_rdr rdrCount;
+
+	printf("test\n");
+	rdr_makezero(&rdrCount);
+	redirect_malloc(cmd,str,&rdrCount);
 	while(str[i])
 	{
 		if(str[i] == INPUT || str[i] == OUTPUT || \
@@ -119,10 +140,6 @@ void redirect_finder(t_shell *cmd,char *str,int i,int type)
 				i++;
 			while(str[i] == '\t' || str[i] == ' ')
 				i++;
-			int a = redirect_counter(str,0,APPEND);
-			printf("%d", a);
-			exit(1);
-			redirect_malloc(cmd,str,type);
 			redirects_filler(cmd,str,type,i);
 		}
 		i++;
@@ -155,5 +172,3 @@ void struct_filler(t_shell *cmd, char *str, int i)
 		if(ft_exist(str,PIPE,0))
 			split_pipe(cmd,str,0,0);
 }
-
-

@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 16:35:09 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/06 17:29:30 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/09/07 19:20:46 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,18 @@ typedef struct s_shell
 	struct s_env *main_env;
 	struct s_shell *next;
 }	t_shell;
+
+typedef struct s_rdr
+{
+	int	ic;
+	int oc;
+	int ac;
+	int hc;
+	int icwhile;
+	int ocwhile;
+	int acwhile;
+	int hcwhile;
+}	t_rdr;
 
 typedef struct s_garbage{
 	void *data;
