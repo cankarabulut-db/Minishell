@@ -106,7 +106,7 @@ void start_parse(char *org_str,t_shell *cmd)
 	quote_check(org_str);
 	tokenize1(tokenized_str,org_str,0);
 	tokenize2(tokenized_str,org_str,0);
-	pipe_redirect_ba(org_str,0);
+	pipe_ba(org_str,0);
 	free(tokenized_str);
 	//char *test = quote_remover(org_str,0,0);
 	struct_filler(cmd,org_str,0);

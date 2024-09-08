@@ -1,5 +1,5 @@
 NAME = minishell
-SRC = main.c utils/error_utils.c parsing/ps.c parsing/ps1.c utils/ft_utils.c\
+SRC = main.c utils/error_utils.c parsing/ps.c parsing/ps1.c utils/ft_utils.c utils/ft_parse_utils.c\
 
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra

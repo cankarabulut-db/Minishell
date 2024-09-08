@@ -62,6 +62,7 @@ typedef struct s_rdr
 	int ocwhile;
 	int acwhile;
 	int hcwhile;
+	int type;
 }	t_rdr;
 
 typedef struct s_garbage{
@@ -74,24 +75,28 @@ typedef struct s_env
 	char **env;
 }			t_env;
 
-			
-
+int ft_exist(char *str,char a,int i);	
+int ft_strplen(char **str);
 
 void error_msg(char *str1,int i);
 void start_parse(char *org_str,t_shell *cmd);
-void split_pipe(t_shell *cmd,char *str,int i, int size);
-void start_cmd(char **str);
+void split_pipe_and_fill(t_shell *cmd,char *str,int i, int size);
+void start_cmd(char **env);
+
+void empty_maker(char *str,char a,int start,int len);
 void struct_initializer(t_shell *cmd);
+
 void struct_filler(t_shell *cmd, char *str, int i);
-int ft_exist(char *str,char a,int i);
-void cmd_filler(t_shell *cmd,char *str,int i,int b);
+
 void tokenize1(char *str,char *org_str,int i);
 void tokenize2(char *str,char *org_str,int i);
-int ft_strplen(char **str);
+
+
 char *quote_remover(char *str,int i,int j);
 void quote_check(char *str);
-void pipe_redirect_ba(char *str,int i);
-void redirect_find_fill(t_shell *cmd,char *str,int i,int type);
+void pipe_ba(char *str,int i);
+void redirect_find_fill(t_shell *cmd,char *str,int i);
 void redirects_filler(t_shell *cmd,char *str,t_rdr *count,int i);
+int redirect_counter(char *str,int i,int redirectType);
 
 #endif

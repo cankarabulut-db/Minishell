@@ -35,7 +35,7 @@ void start_cmd(char **env)
 	while(1)
 	{
 		struct_initializer(cmd);
-		rcmd = readline("kurdishell> ");
+		rcmd = readline("kurdishell>");
 		if(!rcmd)
 		{
 			printf("exit\n");

@@ -10,9 +10,10 @@ void rdr_makezero(t_rdr *count)
 	count->ic = 0;
 	count->ac = 0;
 	count->hc = 0;
+	count->type = 0;
 }
 
-void pipe_redirect_ba(char *str,int i)
+void pipe_ba(char *str,int i)
 {
 	while(str[i])
 	{
@@ -66,80 +67,29 @@ void input_output_control(char *str,int i)
 		i++;
 	}
 }
-int redirect_counter(char *str,int i,int redirectType)
-{
-	int count;
 
-	count = 0;
-	while(str[i])
-	{
-		if(str[i] == redirectType && str[i+1] == redirectType)
-		{
-			count++;
-			i+=2;
-		}
-		else if(str[i] == redirectType)
-		{
-			count++;
-			i++;
-		}
-		i++;
-	}
-	return (count);
-}
-void empty_maker(char *str,char a,int start,int len)
-{
-	int i = 0;
-
-	i = start;
-	if(str[start] == DOUBLEQ || str[start] == SINGLEQ)
-	{
-		start++;
-		while(len + i > start && str[start] && \
-		(str[start] != DOUBLEQ && str[start] != SINGLEQ))
-		{
-			str[start] = a;
-			start++;
-		}
-	}
-	else
-	{
-		while(len + i > start && str[start] && (str[start] != ' ' && str[start] != '\t'))
-		{
-			str[start] = a;
-			start++;
-		}
-	}
-	
-}
 void redirects_filler(t_shell *cmd,char *str,t_rdr *count,int i)
 {
 	int start;
 
 	start = i;
 
-	if(str[i] == DOUBLEQ || str[i] == SINGLEQ)
-	{
-		i++;
+	if((str[i] == DOUBLEQ || str[i] == SINGLEQ) && i++)
 		while((str[i] != DOUBLEQ && str[i] != SINGLEQ) && str[i])
 			i++;
-	}
 	else
-	{
 		while((str[i] != ' ' && str[i] != '\t') && str[i])
 			i++;
-	}
-		
-	if(count->ic > count->icwhile)
-		cmd->input[count->icwhile++] = ft_substr(str,start,i - start);
-	else if(count->oc > count->ocwhile)
-		cmd->output[count->ocwhile++] = ft_substr(str,start,i - start);
-	else if(count->ac > count->acwhile)
-		cmd->append[count->acwhile++] = ft_substr(str,start,i - start);
-	else if(count->hc > count->hcwhile)
-		cmd->heredoc[count->hcwhile++] = ft_substr(str,start,i - start);
+	if(count->ic > count->icwhile && count->type == INPUT)
+			cmd->input[count->icwhile++] = ft_substr(str,start,i - start);
+	else if(count->oc > count->ocwhile && count->type == OUTPUT)
+			cmd->output[count->ocwhile++] = ft_substr(str,start,i - start);
+	else if(count->ac > count->acwhile && count->type == APPEND)
+			cmd->append[count->acwhile++] = ft_substr(str,start,i - start);
+	else if(count->hc > count->hcwhile && count->type == HEREDOC)
+			cmd->heredoc[count->hcwhile++] = ft_substr(str,start,i - start);
+	
 	empty_maker(str,' ',start,i - start);
-	printf("%s\n",str);
 }
 
 void redirect_malloc(t_shell *cmd,char *str,t_rdr *rdrc)
@@ -154,7 +104,8 @@ void redirect_malloc(t_shell *cmd,char *str,t_rdr *rdrc)
 	cmd->heredoc = malloc(sizeof(char *) * rdrc->hc + 1);
 	cmd->append = malloc(sizeof(char *) * rdrc->ac + 1);
 }
-void redirect_find_fill(t_shell *cmd,char *str,int i,int type)
+
+void redirect_find_fill(t_shell *cmd,char *str,int i)
 {
 	t_rdr rdrCount;
 
@@ -165,7 +116,8 @@ void redirect_find_fill(t_shell *cmd,char *str,int i,int type)
 		if(str[i] == INPUT || str[i] == OUTPUT || \
 			str[i] == APPEND || str[i] == HEREDOC)
 		{
-			if(type == APPEND || type == HEREDOC)
+			rdrCount.type = str[i];
+			if(rdrCount.type == APPEND || rdrCount.type == HEREDOC)
 			{
 				str[i] = ' ';
 				str[i+1] = ' ';
@@ -184,7 +136,7 @@ void redirect_find_fill(t_shell *cmd,char *str,int i,int type)
 	}
 }
 
-void split_pipe(t_shell *cmd,char *str,int i, int size)
+void split_pipe_and_fill(t_shell *cmd,char *str,int i, int size)
 {
 	char **pipe_cmd;
 	t_shell *temp;
@@ -196,7 +148,7 @@ void split_pipe(t_shell *cmd,char *str,int i, int size)
 	{
 		heredoc_append_control(pipe_cmd[i],0);
 		input_output_control(pipe_cmd[i],0);
-		redirect_find_fill(cmd,pipe_cmd[i],0,0);
+		redirect_find_fill(cmd,pipe_cmd[i],0);
 		cmd->next = malloc(sizeof(t_shell));
 		cmd = cmd->next;
 		i++;
@@ -208,5 +160,5 @@ void struct_filler(t_shell *cmd, char *str, int i)
 	cmd = malloc(sizeof(t_shell));
 	(void)i;
 		if(ft_exist(str,PIPE,0))
-			split_pipe(cmd,str,0,0);
+			split_pipe_and_fill(cmd,str,0,0);
 }
