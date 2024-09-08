@@ -80,7 +80,7 @@ void tokenize1(char *str,char *org_str,int i)
 			org_str[i] = str[i];
 			i++;
 			while(str[i] != '"')
-					org_str[i++] = CHAR;
+					str[i++] = CHAR;
 				str[i] = DOUBLEQ;
 			org_str[i] = str[i];
 		}
@@ -90,7 +90,7 @@ void tokenize1(char *str,char *org_str,int i)
 			org_str[i] = str[i];
 			i++;
 			while(str[i] != '\'')
-					org_str[i++] = CHAR;
+					str[i++] = CHAR;
 			str[i] = SINGLEQ;
 			org_str[i] = str[i];
 		}
@@ -108,9 +108,8 @@ void start_parse(char *org_str,t_shell *cmd)
 	tokenize2(tokenized_str,org_str,0);
 	pipe_redirect_ba(org_str,0);
 	free(tokenized_str);
-	char *test = quote_remover(org_str,0,0);
-
-	struct_filler(cmd,test,0);
+	//char *test = quote_remover(org_str,0,0);
+	struct_filler(cmd,org_str,0);
 
 	printf("\n");
 	//cmd_filler(cmd,str,0,0);

@@ -87,14 +87,49 @@ int redirect_counter(char *str,int i,int redirectType)
 	}
 	return (count);
 }
+void empty_maker(char *str,char a,int start,int len)
+{
+	int i = 0;
 
+	i = start;
+	if(str[start] == DOUBLEQ || str[start] == SINGLEQ)
+	{
+		start++;
+		while(len + i > start && str[start] && \
+		(str[start] != DOUBLEQ && str[start] != SINGLEQ))
+		{
+			str[start] = a;
+			start++;
+		}
+	}
+	else
+	{
+		while(len + i > start && str[start] && (str[start] != ' ' && str[start] != '\t'))
+		{
+			str[start] = a;
+			start++;
+		}
+	}
+	
+}
 void redirects_filler(t_shell *cmd,char *str,t_rdr *count,int i)
 {
 	int start;
 
 	start = i;
-	while((str[i] != ' ' && str[i] != '\t') && str[i])
+
+	if(str[i] == DOUBLEQ || str[i] == SINGLEQ)
+	{
 		i++;
+		while((str[i] != DOUBLEQ && str[i] != SINGLEQ) && str[i])
+			i++;
+	}
+	else
+	{
+		while((str[i] != ' ' && str[i] != '\t') && str[i])
+			i++;
+	}
+		
 	if(count->ic > count->icwhile)
 		cmd->input[count->icwhile++] = ft_substr(str,start,i - start);
 	else if(count->oc > count->ocwhile)
@@ -103,7 +138,10 @@ void redirects_filler(t_shell *cmd,char *str,t_rdr *count,int i)
 		cmd->append[count->acwhile++] = ft_substr(str,start,i - start);
 	else if(count->hc > count->hcwhile)
 		cmd->heredoc[count->hcwhile++] = ft_substr(str,start,i - start);
+	empty_maker(str,' ',start,i - start);
+	printf("%s\n",str);
 }
+
 void redirect_malloc(t_shell *cmd,char *str,t_rdr *rdrc)
 {
 	rdrc->ic = redirect_counter(str,0,INPUT);
@@ -127,11 +165,17 @@ void redirect_find_fill(t_shell *cmd,char *str,int i,int type)
 		if(str[i] == INPUT || str[i] == OUTPUT || \
 			str[i] == APPEND || str[i] == HEREDOC)
 		{
-			type = str[i];
 			if(type == APPEND || type == HEREDOC)
+			{
+				str[i] = ' ';
+				str[i+1] = ' ';
 				i+=2;
+			}
 			else
+			{
+				str[i] = ' ';
 				i++;
+			}
 			while(str[i] == '\t' || str[i] == ' ')
 				i++;
 			redirects_filler(cmd,str,&rdrCount,i);
@@ -147,7 +191,6 @@ void split_pipe(t_shell *cmd,char *str,int i, int size)
 
 	pipe_cmd = ft_split(str,PIPE);
 	size = ft_strplen(pipe_cmd);
-	cmd = malloc(sizeof(t_shell));
 	temp = cmd;
 	while(size > i)
 	{
@@ -162,6 +205,7 @@ void split_pipe(t_shell *cmd,char *str,int i, int size)
 }
 void struct_filler(t_shell *cmd, char *str, int i)
 {
+	cmd = malloc(sizeof(t_shell));
 	(void)i;
 		if(ft_exist(str,PIPE,0))
 			split_pipe(cmd,str,0,0);
