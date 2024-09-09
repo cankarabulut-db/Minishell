@@ -1,5 +1,7 @@
 {
 	"files.associations": {
-		"sstream": "c"
+		"sstream": "c",
+		"unistd.h": "c",
+		"readline.h": "c"
 	}
 }
