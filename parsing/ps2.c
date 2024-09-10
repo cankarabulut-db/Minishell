@@ -49,7 +49,20 @@ void	redirect_find_fill(t_shell *cmd, char *str, int i, t_rdr *rdrcount)
 		i++;
 	}
 }
+void cmd_find_fill(t_shell *cmd,char *str,int i)
+{
+	int start;
 
+	while(str[i] == '\t' || str[i] == ' ')
+		i++;
+	start = i;
+	printf("start noktası : %d\n",start);
+	while((str[i] != ' ' && str[i] != '\t') && str[i])
+		i++;
+	printf("finish noktası : %d\n",i);
+	cmd->cmd = ft_substr(str,start,i - start);
+	printf("sonuç%s\n", cmd->cmd);
+}
 void	split_pipe_and_fill(t_shell *cmd, char *str, int i, t_rdr *listsize)
 {
 	char	**pipe_cmd;
@@ -63,7 +76,7 @@ void	split_pipe_and_fill(t_shell *cmd, char *str, int i, t_rdr *listsize)
 		input_output_control(pipe_cmd[i], 0);
 		heredoc_append_control(pipe_cmd[i], 0);
 		redirect_find_fill(cmd, pipe_cmd[i], 0, listsize);
-		printf("%s\n",pipe_cmd[i]);
+		cmd_find_fill(cmd,pipe_cmd[i],0);
 		cmd->next = malloc(sizeof(t_shell));
 		cmd = cmd->next;
 		i++;
