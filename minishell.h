@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 16:35:09 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/09 14:13:59 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/09/10 18:52:08 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,5 +101,8 @@ void	pipe_ba(char *str, int i);
 void	redirect_find_fill(t_shell *cmd, char *str, int i, t_rdr *rdrcount);
 void	redirects_filler(t_shell *cmd, char *str, t_rdr *count, int i);
 int		redirect_counter(char *str, int i, int redirectType);
+
+void tab_to_space(char *str,int i);
+void free_double_ptr(char **str);
 
 #endif

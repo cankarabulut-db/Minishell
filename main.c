@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:59:11 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/05 19:31:02 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/09/10 18:47:24 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,13 @@ void struct_initializer(t_shell *cmd)
 	cmd->main_env = NULL;
 	cmd->next = NULL;
 	cmd->output = NULL;
+}
+
+void tab_to_space(char *str,int i)
+{
+	while(str[++i])
+		if (str[i] == '\t')
+			str[i] = 32;	
 }
 void start_cmd(char **env)
 {
@@ -42,6 +49,7 @@ void start_cmd(char **env)
 			exit(EXIT_FAILURE);
 		}
 		add_history(rcmd);
+		tab_to_space(rcmd, -1);
 		temp = ft_strtrim(rcmd," \t");
 		start_parse(temp,cmd);
 	}

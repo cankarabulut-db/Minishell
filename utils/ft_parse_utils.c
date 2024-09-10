@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_parse_utils.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/10 19:16:44 by nkarabul          #+#    #+#             */
+/*   Updated: 2024/09/10 19:16:45 by nkarabul         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void empty_maker(char *str,char a,int start,int len)
@@ -19,6 +31,14 @@ void empty_maker(char *str,char a,int start,int len)
 			str[start++] = a;
 	}
 	
+}
+
+void free_double_ptr(char **str)
+{
+	int i = 0;
+	while (str[i])
+		free(str[i++]);
+	free(str);
 }
 
 int redirect_counter(char *str,int i,int redirectType)

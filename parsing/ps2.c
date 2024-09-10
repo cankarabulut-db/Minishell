@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:43:20 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/09 20:12:43 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/09/10 19:19:01 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	redirect_find_fill(t_shell *cmd, char *str, int i, t_rdr *rdrcount)
 		i++;
 	}
 }
+
 void cmd_find_fill(t_shell *cmd,char *str,int i)
 {
 	int start;
@@ -56,13 +57,17 @@ void cmd_find_fill(t_shell *cmd,char *str,int i)
 	while(str[i] == '\t' || str[i] == ' ')
 		i++;
 	start = i;
-	printf("start noktası : %d\n",start);
 	while((str[i] != ' ' && str[i] != '\t') && str[i])
 		i++;
-	printf("finish noktası : %d\n",i);
 	cmd->cmd = ft_substr(str,start,i - start);
-	printf("sonuç%s\n", cmd->cmd);
+	empty_maker(str,' ',start,i - start);
 }
+void make_empty(char *str,int i)
+{
+	while(str[++i])
+		str[i] = ' ';
+}
+
 void	split_pipe_and_fill(t_shell *cmd, char *str, int i, t_rdr *listsize)
 {
 	char	**pipe_cmd;
@@ -77,7 +82,10 @@ void	split_pipe_and_fill(t_shell *cmd, char *str, int i, t_rdr *listsize)
 		heredoc_append_control(pipe_cmd[i], 0);
 		redirect_find_fill(cmd, pipe_cmd[i], 0, listsize);
 		cmd_find_fill(cmd,pipe_cmd[i],0);
+		cmd->args = ft_split(pipe_cmd[i],' ');
+		make_empty(pipe_cmd[i],-1);
 		cmd->next = malloc(sizeof(t_shell));
+		printf("%s\n",pipe_cmd[i]);
 		cmd = cmd->next;
 		i++;
 	}
