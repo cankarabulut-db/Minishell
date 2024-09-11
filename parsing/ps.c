@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:59:13 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/09 17:11:08 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/09/11 21:40:56 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,36 @@ char	*quote_remover(char *str, int i, int j)
 		j++;
 		i++;
 	}
+	free(str);
 	return (removed);
+}
+
+void	tokenize1(char *str, char *org_str, int i)
+{
+	while (str[i])
+	{
+		if (str[i] == '\"')
+		{
+			str[i] = DOUBLEQ;
+			org_str[i] = str[i];
+			i++;
+			while (str[i] != '"')
+				str[i++] = CHAR;
+			str[i] = DOUBLEQ;
+			org_str[i] = str[i];
+		}
+		else if (str[i] == '\'')
+		{
+			str[i] = SINGLEQ;
+			org_str[i] = str[i];
+			i++;
+			while (str[i] != '\'')
+				str[i++] = CHAR;
+			str[i] = SINGLEQ;
+			org_str[i] = str[i];
+		}
+		i++;
+	}
 }
 
 void	tokenize2(char *str, char *org_str, int i) // str free
@@ -85,33 +114,20 @@ void	tokenize2(char *str, char *org_str, int i) // str free
 	}
 }
 
-void	tokenize1(char *str, char *org_str, int i)
-{
-	while (str[i])
-	{
-		if (str[i] == '"')
-		{
-			str[i] = DOUBLEQ;
-			org_str[i] = str[i];
-			i++;
-			while (str[i] != '"')
-				str[i++] = CHAR;
-			str[i] = DOUBLEQ;
-			org_str[i] = str[i];
-		}
-		else if (str[i] == '\'')
-		{
-			str[i] = SINGLEQ;
-			org_str[i] = str[i];
-			i++;
-			while (str[i] != '\'')
-				str[i++] = CHAR;
-			str[i] = SINGLEQ;
-			org_str[i] = str[i];
-		}
-		i++;
-	}
-}
+//void	tokenize_dollar(char *str,int i)
+//{
+//	while(str[i])
+//	{
+//		if(str[i] == DOUBLEQ)
+//		{
+//			while(str[i] != DOUBLEQ && str[i])
+//				{
+//					if(str[i] == DOLLAR_Q)
+//				}
+//		}
+//		i++;
+//	}
+//}
 
 void	start_parse(char *org_str, t_shell *cmd)
 {

@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:43:20 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/10 19:19:01 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/09/11 21:16:37 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,8 @@ void cmd_find_fill(t_shell *cmd,char *str,int i)
 	start = i;
 	while((str[i] != ' ' && str[i] != '\t') && str[i])
 		i++;
-	cmd->cmd = ft_substr(str,start,i - start);
+	cmd->cmd = quote_remover(ft_substr(str , start, i - start),0,0);;
 	empty_maker(str,' ',start,i - start);
-}
-void make_empty(char *str,int i)
-{
-	while(str[++i])
-		str[i] = ' ';
 }
 
 void	split_pipe_and_fill(t_shell *cmd, char *str, int i, t_rdr *listsize)
@@ -82,10 +77,12 @@ void	split_pipe_and_fill(t_shell *cmd, char *str, int i, t_rdr *listsize)
 		heredoc_append_control(pipe_cmd[i], 0);
 		redirect_find_fill(cmd, pipe_cmd[i], 0, listsize);
 		cmd_find_fill(cmd,pipe_cmd[i],0);
+		pipe_cmd[i] = quote_remover(pipe_cmd[i],0,0);
 		cmd->args = ft_split(pipe_cmd[i],' ');
 		make_empty(pipe_cmd[i],-1);
+		printf("Environment : %s\n",cmd->main_env[0]);
 		cmd->next = malloc(sizeof(t_shell));
-		printf("%s\n",pipe_cmd[i]);
+		cmd->next = cmd->main_env;
 		cmd = cmd->next;
 		i++;
 	}

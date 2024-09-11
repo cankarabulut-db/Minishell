@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:06:27 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/09 20:11:55 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/09/11 17:51:35 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,12 +120,12 @@ void	redirects_filler(t_shell *cmd, char *str, t_rdr *count, int i)
 		while ((str[i] != ' ' && str[i] != '\t') && str[i])
 			i++;
 	if (count->ic > count->icwhile && count->type == INPUT)
-		cmd->input[count->icwhile++] = ft_substr(str, start, i - start);
+		cmd->input[count->icwhile++] = quote_remover(ft_substr(str , start, i - start),0,0);
 	else if (count->oc > count->ocwhile && count->type == OUTPUT)
-		cmd->output[count->ocwhile++] = ft_substr(str, start, i - start);
+		cmd->input[count->icwhile++] = quote_remover(ft_substr(str , start, i - start),0,0);
 	else if (count->ac > count->acwhile && count->type == APPEND)
-		cmd->append[count->acwhile++] = ft_substr(str, start, i - start);
+		cmd->input[count->icwhile++] = quote_remover(ft_substr(str , start, i - start),0,0);
 	else if (count->hc > count->hcwhile && count->type == HEREDOC)
-		cmd->heredoc[count->hcwhile++] = ft_substr(str, start, i - start);
+		cmd->input[count->icwhile++] = quote_remover(ft_substr(str , start, i - start),0,0);
 	empty_maker(str, ' ', start, i - start);
 }
