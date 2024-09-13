@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:06:27 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/11 17:51:35 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/09/09 20:11:55 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,16 @@ void	pipe_ba(char *str, int i)
 		if (str[i] == PIPE)
 		{
 			i++;
-			if (str[i] == 0)
-				error_msg(str, PIPE);
-			while ((str[i] >= '\t' && str[i] <= 13) || str[i] == ' ')
+			while (str[i] == ' ')
 				i++;
-			if (str[i] == 0)
+			if (str[i] == '\0' || str[i] == PIPE)
 				error_msg(str, PIPE);
 		}
 		i++;
 	}
+	i = 0;
+	if(str[0] == PIPE)
+		error_msg(str, PIPE);
 }
 int ft_rdrconfirmator(char redirect)
 {
@@ -52,8 +53,7 @@ int ft_rdrconfirmator(char redirect)
 		return (1);
 	else if(redirect == APPEND)
 		return (1);
-	return (0);
-		
+	return (0);	
 }
 void	heredoc_append_control(char *str, int i)
 {
@@ -69,7 +69,7 @@ void	heredoc_append_control(char *str, int i)
 					error_msg(str, str[i]);
 				error_msg(str, 1);
 			}
-			while (str[i] == '\t' || str[i] == ' ')
+			while (str[i] == ' ')
 				i++;
 			if (str[i] == 0 || ft_rdrconfirmator(str[i]))
 			{
@@ -95,7 +95,7 @@ void	input_output_control(char *str, int i)
 					error_msg(str, str[i]);
 				error_msg(str, 1);
 			}
-			while (str[i] == '\t' || str[i] == ' ')
+			while (str[i] == ' ')
 				i++;
 			if (str[i] == 0 || ft_rdrconfirmator(str[i]))
 				{
@@ -117,15 +117,15 @@ void	redirects_filler(t_shell *cmd, char *str, t_rdr *count, int i)
 		while ((str[i] != DOUBLEQ && str[i] != SINGLEQ) && str[i])
 			i++;
 	else
-		while ((str[i] != ' ' && str[i] != '\t') && str[i])
+		while (str[i] != ' ' && str[i])
 			i++;
 	if (count->ic > count->icwhile && count->type == INPUT)
-		cmd->input[count->icwhile++] = quote_remover(ft_substr(str , start, i - start),0,0);
+		cmd->input[count->icwhile++] = quote_remover(ft_substr(str, start, i - start), 0, 0);
 	else if (count->oc > count->ocwhile && count->type == OUTPUT)
-		cmd->input[count->icwhile++] = quote_remover(ft_substr(str , start, i - start),0,0);
+		cmd->output[count->ocwhile++] = quote_remover(ft_substr(str, start, i - start), 0, 0);
 	else if (count->ac > count->acwhile && count->type == APPEND)
-		cmd->input[count->icwhile++] = quote_remover(ft_substr(str , start, i - start),0,0);
+		cmd->append[count->acwhile++] = quote_remover(ft_substr(str, start, i - start), 0, 0);
 	else if (count->hc > count->hcwhile && count->type == HEREDOC)
-		cmd->input[count->icwhile++] = quote_remover(ft_substr(str , start, i - start),0,0);
+		cmd->heredoc[count->hcwhile++] = quote_remover(ft_substr(str, start, i - start), 0, 0);
 	empty_maker(str, ' ', start, i - start);
 }

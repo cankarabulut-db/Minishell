@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:59:13 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/11 21:40:56 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/09/09 17:11:08 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ char	*quote_remover(char *str, int i, int j)
 
 	strsize = ft_strlen(str);
 	removed = malloc(sizeof(char) * strsize + 1);
+	if(!removed)
+		return (NULL);
 	while (str[i])
 	{
 		while (str[i] == DOUBLEQ || str[i] == SINGLEQ)
@@ -54,6 +56,7 @@ char	*quote_remover(char *str, int i, int j)
 		j++;
 		i++;
 	}
+	removed[j] = '\0';
 	free(str);
 	return (removed);
 }
@@ -62,7 +65,7 @@ void	tokenize1(char *str, char *org_str, int i)
 {
 	while (str[i])
 	{
-		if (str[i] == '\"')
+		if (str[i] == '"')
 		{
 			str[i] = DOUBLEQ;
 			org_str[i] = str[i];
@@ -114,20 +117,8 @@ void	tokenize2(char *str, char *org_str, int i) // str free
 	}
 }
 
-//void	tokenize_dollar(char *str,int i)
-//{
-//	while(str[i])
-//	{
-//		if(str[i] == DOUBLEQ)
-//		{
-//			while(str[i] != DOUBLEQ && str[i])
-//				{
-//					if(str[i] == DOLLAR_Q)
-//				}
-//		}
-//		i++;
-//	}
-//}
+
+
 
 void	start_parse(char *org_str, t_shell *cmd)
 {
@@ -138,8 +129,7 @@ void	start_parse(char *org_str, t_shell *cmd)
 	quote_check(org_str);
 	tokenize1(tokenized_str, org_str, 0);
 	tokenize2(tokenized_str, org_str, 0);
-	pipe_ba(org_str, 0);
 	free(tokenized_str);
+	pipe_ba(org_str, 0);
 	struct_filler(cmd, org_str, 0);
-	printf("\n");
 }

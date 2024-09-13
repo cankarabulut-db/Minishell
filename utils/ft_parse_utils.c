@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 19:16:44 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/11 19:08:26 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/09/10 19:16:45 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,6 @@ void free_double_ptr(char **str)
 	free(str);
 }
 
-void make_empty(char *str,int i)
-{
-	while(str[++i])
-		str[i] = ' ';
-}
 
 int redirect_counter(char *str,int i,int redirectType)
 {

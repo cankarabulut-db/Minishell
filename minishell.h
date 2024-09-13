@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 16:35:09 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/11 19:08:12 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/09/10 18:52:08 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@
 # define OUTPUT 6 // >
 # define INPUT 7 // <
 # define PIPE 8
-# define DOLLAR_O 14
-# define DOLLAR_Q 15
 
 typedef struct s_shell
 {
@@ -106,6 +104,7 @@ int		redirect_counter(char *str, int i, int redirectType);
 
 void tab_to_space(char *str,int i);
 void free_double_ptr(char **str);
-void make_empty(char *str,int i);
+void single_cmd_fill(t_shell *cmd, char *str, t_rdr *list);
+void free_list(t_shell *cmd);
 
 #endif

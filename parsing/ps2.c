@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:43:20 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/11 21:16:37 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/09/10 19:19:01 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,13 +54,21 @@ void cmd_find_fill(t_shell *cmd,char *str,int i)
 {
 	int start;
 
-	while(str[i] == '\t' || str[i] == ' ')
+	while(str[i] == ' ')
 		i++;
 	start = i;
-	while((str[i] != ' ' && str[i] != '\t') && str[i])
+	while(str[i] != ' ' && str[i])
 		i++;
-	cmd->cmd = quote_remover(ft_substr(str , start, i - start),0,0);;
-	empty_maker(str,' ',start,i - start);
+	if(i - start != 0)
+	{
+		cmd->cmd = quote_remover(ft_substr(str,start,i - start), 0, 0);
+		empty_maker(str,' ',start,i - start);
+	}
+}
+void make_empty(char *str,int i)
+{
+	while(str[++i])
+		str[i] = ' ';
 }
 
 void	split_pipe_and_fill(t_shell *cmd, char *str, int i, t_rdr *listsize)
@@ -73,20 +81,38 @@ void	split_pipe_and_fill(t_shell *cmd, char *str, int i, t_rdr *listsize)
 	temp = cmd;
 	while (listsize->listsize > i)
 	{
-		input_output_control(pipe_cmd[i], 0);
 		heredoc_append_control(pipe_cmd[i], 0);
+		input_output_control(pipe_cmd[i], 0);
 		redirect_find_fill(cmd, pipe_cmd[i], 0, listsize);
 		cmd_find_fill(cmd,pipe_cmd[i],0);
-		pipe_cmd[i] = quote_remover(pipe_cmd[i],0,0);
 		cmd->args = ft_split(pipe_cmd[i],' ');
 		make_empty(pipe_cmd[i],-1);
-		printf("Environment : %s\n",cmd->main_env[0]);
 		cmd->next = malloc(sizeof(t_shell));
-		cmd->next = cmd->main_env;
 		cmd = cmd->next;
 		i++;
 	}
 	cmd = temp;
+}
+void free_whole_list(t_shell *cmd)
+{
+	while(cmd != NULL)
+	{
+
+	}
+}
+void single_cmd_fill(t_shell *cmd, char *str, t_rdr *list)
+{
+	char *dist_str;
+
+	dist_str = ft_strdup(str);
+	heredoc_append_control(dist_str, 0);
+	input_output_control(dist_str, 0);
+	redirect_find_fill(cmd, dist_str, 0, list);
+	cmd_find_fill(cmd, dist_str,0);
+	cmd->args = ft_split(dist_str, ' ');
+	make_empty(dist_str,-1);
+	if(cmd->append)
+		free_double_ptr(cmd->append);
 }
 
 void	struct_filler(t_shell *cmd, char *str, int i)
@@ -96,5 +122,7 @@ void	struct_filler(t_shell *cmd, char *str, int i)
 	cmd = malloc(sizeof(t_shell));
 	(void)i;
 	if (ft_exist(str, PIPE, 0))
-		split_pipe_and_fill(cmd, str, 0, &list);
+			split_pipe_and_fill(cmd, str, 0, &list);
+	else
+			single_cmd_fill(cmd, str, &list);
 }

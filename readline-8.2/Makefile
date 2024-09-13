@@ -31,7 +31,7 @@ PACKAGE_TARNAME = readline
 srcdir = .
 
 top_srcdir = .
-BUILD_DIR = /Users/nkarabul/Desktop/minishel1/readline-8.2
+BUILD_DIR = /Users/numancankarabulut/Downloads/minishell-c78b42c597db6007fb75021afdd16cc2b6130df6/readline-8.2
 
 INSTALL = /usr/bin/install -c
 INSTALL_PROGRAM = ${INSTALL}
@@ -48,7 +48,7 @@ MV = mv
 
 SHELL = /bin/sh
 
-prefix = /Users/nkarabul/Desktop/minishel1/readline
+prefix = /Users/numancankarabulut/Downloads/minishell-c78b42c597db6007fb75021afdd16cc2b6130df6/readline
 exec_prefix = ${prefix}
 
 datarootdir = ${prefix}/share
