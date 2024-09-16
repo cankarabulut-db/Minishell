@@ -22,7 +22,7 @@ topdir = ..
 srcdir = .
 
 
-prefix = /Users/numancankarabulut/Downloads/minishell-c78b42c597db6007fb75021afdd16cc2b6130df6/readline
+prefix = /Users/nkarabul/Desktop/test11mini/readline
 
 datarootdir = ${prefix}/share
 
@@ -49,7 +49,7 @@ RM = rm -f
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 
-BUILD_DIR = /Users/numancankarabulut/Downloads/minishell-c78b42c597db6007fb75021afdd16cc2b6130df6/readline-8.2
+BUILD_DIR = /Users/nkarabul/Desktop/test11mini/readline-8.2
 TEXINPUTDIR = $(srcdir)
 
 MAKEINFO    = LANGUAGE= makeinfo

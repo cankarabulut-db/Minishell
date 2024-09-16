@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:43:20 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/10 19:19:01 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/09/16 22:54:27 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,11 @@ void	redirect_malloc(t_shell *cmd, char *str, t_rdr *rdrc)
 	cmd->output = malloc(sizeof(char *) * rdrc->oc + 1);
 	cmd->heredoc = malloc(sizeof(char *) * rdrc->hc + 1);
 	cmd->append = malloc(sizeof(char *) * rdrc->ac + 1);
+
+	cmd->input[rdrc->ic] = NULL;
+	cmd->output[rdrc->oc] = NULL;
+	cmd->heredoc[rdrc->hc] = NULL;
+	cmd->append[rdrc->ac] = NULL;
 }
 
 void	redirect_find_fill(t_shell *cmd, char *str, int i, t_rdr *rdrcount)
@@ -40,9 +45,9 @@ void	redirect_find_fill(t_shell *cmd, char *str, int i, t_rdr *rdrcount)
 				str[i + 1] = ' ';
 				i += 2;
 			}
-			else
+			else if(rdrcount->type == INPUT || rdrcount->type == OUTPUT)
 				str[i++] = ' ';
-			while (str[i] == '\t' || str[i] == ' ')
+			while (str[i] == ' ')
 				i++;
 			redirects_filler(cmd, str, rdrcount, i);
 		}
@@ -59,11 +64,8 @@ void cmd_find_fill(t_shell *cmd,char *str,int i)
 	start = i;
 	while(str[i] != ' ' && str[i])
 		i++;
-	if(i - start != 0)
-	{
-		cmd->cmd = quote_remover(ft_substr(str,start,i - start), 0, 0);
-		empty_maker(str,' ',start,i - start);
-	}
+	cmd->cmd = quote_remover(ft_substr(str,start,i - start), 0, 0);
+	empty_maker(str,' ',start,i - start);
 }
 void make_empty(char *str,int i)
 {
@@ -87,32 +89,24 @@ void	split_pipe_and_fill(t_shell *cmd, char *str, int i, t_rdr *listsize)
 		cmd_find_fill(cmd,pipe_cmd[i],0);
 		cmd->args = ft_split(pipe_cmd[i],' ');
 		make_empty(pipe_cmd[i],-1);
-		cmd->next = malloc(sizeof(t_shell));
+		cmd->next = ft_calloc(sizeof(t_shell),1);
 		cmd = cmd->next;
 		i++;
 	}
 	cmd = temp;
 }
-void free_whole_list(t_shell *cmd)
-{
-	while(cmd != NULL)
-	{
-
-	}
-}
 void single_cmd_fill(t_shell *cmd, char *str, t_rdr *list)
 {
-	char *dist_str;
+	char *dist_str; 
 
 	dist_str = ft_strdup(str);
 	heredoc_append_control(dist_str, 0);
 	input_output_control(dist_str, 0);
 	redirect_find_fill(cmd, dist_str, 0, list);
 	cmd_find_fill(cmd, dist_str,0);
+	printf("%s\n",dist_str);
 	cmd->args = ft_split(dist_str, ' ');
 	make_empty(dist_str,-1);
-	if(cmd->append)
-		free_double_ptr(cmd->append);
 }
 
 void	struct_filler(t_shell *cmd, char *str, int i)
@@ -125,4 +119,42 @@ void	struct_filler(t_shell *cmd, char *str, int i)
 			split_pipe_and_fill(cmd, str, 0, &list);
 	else
 			single_cmd_fill(cmd, str, &list);
+	
+	//for (int i = 0; i < list.ac; i++)
+	//	printf("Append :%s\n",cmd->append[i]);
+	//for (int i = 0; i < list.oc; i++)
+	//	printf("Output :%s\n",cmd->output[i]);
+	//for (int i = 0; i < list.ic; i++)
+	//	printf("İnput :%s\n",cmd->input[i]);
+	//for (int i = 0; i < list.hc; i++)
+	//	printf("Heredoc %s\n",cmd->heredoc[i]);
+	//for (int i = 0; ft_strplen(cmd->args) > i; i++)
+	//{
+	//	printf("Argüman : %s\n", cmd->args[i]);
+	//}
+	//	printf("Komut : %s\n", cmd->cmd );
+	
+	
+		
+	
+	for (int i = 0;cmd->append[i]; i++)
+	{
+		printf("Append : %s\n",cmd->append[i]);
+	}
+	for (int i = 0;cmd->heredoc[i]; i++)
+	{
+		printf("Heredoc : %s\n",cmd->heredoc[i]);
+	}
+	for (int i = 0;cmd->input[i]; i++)
+	{
+		printf("İnput : %s\n",cmd->input[i]);
+	}
+	for (int i = 0;cmd->output[i]; i++)
+	{
+		printf("Output : %s\n",cmd->output[i]);
+	}
+	printf("cmd: %s\n", cmd->cmd);
+	for (int i = 0;cmd->args[i];i++)
+		printf("argumanlar: %s\n", cmd->args[i]);
+	
 }

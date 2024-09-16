@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:06:27 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/09 20:11:55 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/09/16 23:46:48 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,17 +108,34 @@ void	input_output_control(char *str, int i)
 	}
 }
 
+int is_quote(char a)
+{
+	if(a == DOUBLEQ)
+		return (1);
+	if(a == SINGLEQ)
+		return (1);
+	return (0);
+}
+
 void	redirects_filler(t_shell *cmd, char *str, t_rdr *count, int i)
 {
 	int	start;
 
 	start = i;
-	if ((str[i] == DOUBLEQ || str[i] == SINGLEQ) && i++)
-		while ((str[i] != DOUBLEQ && str[i] != SINGLEQ) && str[i])
+	if (is_quote(str[i]) && i++)
+		while ((!is_quote(str[i])) && str[i])
 			i++;
 	else
-		while (str[i] != ' ' && str[i])
+		while (str[i] != ' ' && str[i] && !ft_rdrconfirmator(str[i]))
+		{
+			if(is_quote(str[i]) && i++)
+			{
+				while(str[i] != ' ' && str[i])
+					i++;
+				break;
+			}
 			i++;
+		}
 	if (count->ic > count->icwhile && count->type == INPUT)
 		cmd->input[count->icwhile++] = quote_remover(ft_substr(str, start, i - start), 0, 0);
 	else if (count->oc > count->ocwhile && count->type == OUTPUT)

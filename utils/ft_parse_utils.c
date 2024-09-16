@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 19:16:44 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/10 19:16:45 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/09/16 23:48:03 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,8 @@ void empty_maker(char *str,char a,int start,int len)
 	int i = 0;
 
 	i = start;
-	if(str[start] == DOUBLEQ || str[start] == SINGLEQ)
-	{
-		start++;
-		while(len + i > start && str[start] && \
-		(str[start] != DOUBLEQ && str[start] != SINGLEQ))
+	while(len + i > start && str[start])
 			str[start++] = a;
-	}
-	else
-	{
-		while(len + i > start && str[start] && \
-		(str[start] != ' ' && str[start] != '\t'))
-			str[start++] = a;
-	}
 	
 }
 
