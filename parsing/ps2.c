@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:43:20 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/17 01:44:38 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/09/18 00:13:53 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	split_pipe_and_fill(t_shell *cmd, char *str, int i, t_rdr *listsize)
 	temp = cmd;
 	while (listsize->listsize > i)
 	{
-		if (check_redirect(pipe_cmd[i]))
+		if(check_redirect(pipe_cmd[i]))
 		{
 			heredoc_append_control(pipe_cmd[i], 0);
 			input_output_control(pipe_cmd[i], 0);
@@ -104,7 +104,12 @@ void	split_pipe_and_fill(t_shell *cmd, char *str, int i, t_rdr *listsize)
 		cmd_find_fill(cmd,pipe_cmd[i],0);
 		cmd->args = ft_split(pipe_cmd[i],' ');
 		make_empty(pipe_cmd[i],-1);
-		cmd->next = ft_calloc(sizeof(t_shell),1);
+		if(i == listsize->listsize -1)
+		{
+			cmd->next = NULL;
+			break;
+		}
+		cmd->next = ft_calloc(sizeof(t_shell),1); // cmd i 0, cmd.next i 1,
 		cmd = cmd->next;
 		i++;
 	}
@@ -115,9 +120,12 @@ void single_cmd_fill(t_shell *cmd, char *str, t_rdr *list)
 	char *dist_str; 
 
 	dist_str = ft_strdup(str);
-	heredoc_append_control(dist_str, 0);
-	input_output_control(dist_str, 0);
-	redirect_find_fill(cmd, dist_str, 0, list);
+	if(check_redirect(str))
+	{
+		heredoc_append_control(dist_str, 0);
+		input_output_control(dist_str, 0);
+		redirect_find_fill(cmd, dist_str, 0, list);
+	}
 	cmd_find_fill(cmd, dist_str,0);
 	cmd->args = ft_split(dist_str, ' ');
 	make_empty(dist_str,-1);
@@ -127,36 +135,40 @@ void	struct_filler(t_shell *cmd, char *str, int i)
 {
 	t_rdr	list;
 
-	cmd = malloc(sizeof(t_shell));
 	(void)i;
 	if (ft_exist(str, PIPE, 0))
 			split_pipe_and_fill(cmd, str, 0, &list);
 	else
 			single_cmd_fill(cmd, str, &list);
 
-	//for (int i = 0; cmd; i++)          REDİRECT VS YOKSA OKUMASIN !
-	//{
-	//	for (int i = 0;cmd->append[i]; i++)
-	//{
-	//	printf("Append : %s\n",cmd->append[i]);
-	//}
-	//for (int i = 0;cmd->heredoc[i]; i++)
-	//{
-	//	printf("Heredoc : %s\n",cmd->heredoc[i]);
-	//}
-	//for (int i = 0;cmd->input[i]; i++)
-	//{
-	//	printf("İnput : %s\n",cmd->input[i]);
-	//}
-	//for (int i = 0;cmd->output[i]; i++)
-	//{
-	//	printf("Output : %s\n",cmd->output[i]);
-	//}
-	//printf("cmd: %s\n", cmd->cmd);
-	//for (int i = 0;cmd->args[i];i++)
-	//	printf("argumanlar: %s\n", cmd->args[i]);
-	//cmd =cmd->next;
-	//}
+	for (int i = 0; cmd!= NULL; i++)          //REDİRECT VS YOKSA OKUMASIN !
+	{
+		printf("*****BEGİNNİNG*****\n");
+		if(cmd->cmd != NULL)
+			printf("%s\n",cmd->cmd);
+		if(cmd->append)
+			for (int i = 0; cmd->append[i]; i++)
+				printf("Append :%s\n",cmd->append[i]);
+		if(cmd->heredoc)
+			for (int i = 0; cmd->heredoc[i]; i++)
+				printf("hereodc.%s\n",cmd->heredoc[i]);
+		if(cmd->args)
+			for (int i = 0; cmd->args[i]; i++)
+				printf("args : %s\n", cmd->args[i]);
+		if(cmd->input)
+			for (int i = 0; cmd->input[i]; i++)
+				printf("input : %s\n", cmd->input[i]);
+		if(cmd->output)
+			for (int i = 0; cmd->output[i]; i++)
+				printf("output : %s\n", cmd->output[i]);
+		printf("*****ENDİNG*****\n");
+			
+			
+			
+			
+			
+		cmd =cmd->next;
+	}
 	
 	
 }
