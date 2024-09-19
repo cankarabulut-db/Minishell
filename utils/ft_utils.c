@@ -32,3 +32,16 @@ int ft_strplen(char **str)
 		i++;
 	return(i);
 }
+
+int ft_print_s(char a)
+{
+	if(a > 32 && a <= 126)	
+		return (1);
+	return (0);
+}
+
+void make_empty(char *str,int i)
+{
+	while(str[++i])
+		str[i] = ' ';
+}

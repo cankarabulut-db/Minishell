@@ -66,6 +66,14 @@ typedef struct s_rdr
 	int	listsize;
 }	t_rdr;
 
+typedef struct s_exist
+{
+	int e_input;
+	int e_output;
+	int e_append;
+	int e_heredoc;
+}				t_exist;
+
 typedef struct s_garbage
 {
 	void				*data;
@@ -106,5 +114,11 @@ void tab_to_space(char *str,int i);
 void free_double_ptr(char **str);
 void single_cmd_fill(t_shell *cmd, char *str, t_rdr *list);
 void free_list(t_shell *cmd);
+int is_quote(char a);
+void args_quote_passer(char *str, int i);
+void untokenizer_args(char **str, int i, int j);
+void args_find_fill(t_shell *cmd, char *str);
+int ft_print_s(char a);
+void make_empty(char *str,int i);
 
 #endif

@@ -26,6 +26,8 @@ void	error_msg(char *str1, int i)
 		printf("kurdishell : syntax error near unexpected token `<<'\n");
 	else if (i == APPEND)
 		printf("kurdishell : syntax error near unexpected token `>>'\n");
+	else if(i == 14)
+		printf("Malloc!\n");
 	free(str1);
 	exit(1);
 }
