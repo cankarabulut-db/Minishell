@@ -120,5 +120,14 @@ void untokenizer_args(char **str, int i, int j);
 void args_find_fill(t_shell *cmd, char *str);
 int ft_print_s(char a);
 void make_empty(char *str,int i);
+void redirect_fill_null(t_shell *cmd,t_rdr *rc);
+int check_redirect(char *pipe_cmd);
+int is_quote(char a);
+void redirect_size(t_rdr *rdrc, char *str);
+void	redirect_malloc(t_shell *cmd, char *str, t_rdr *rdrc);
+void redirect_fill_null(t_shell *cmd,t_rdr *rc);
+void	redirects_filler(t_shell *cmd, char *str, t_rdr *count, int i);
+void	redirect_find_fill(t_shell *cmd, char *str, int i, t_rdr *rdrcount);
+int ft_rdrconfirmator(char redirect);
 
 #endif

@@ -116,20 +116,3 @@ void	tokenize2(char *str, char *org_str, int i) // str free
 		i++;
 	}
 }
-
-
-
-
-void	start_parse(char *org_str, t_shell *cmd)
-{
-	char	*tokenized_str;
-
-	(void)cmd;
-	tokenized_str = ft_strdup(org_str);
-	quote_check(org_str);
-	tokenize1(tokenized_str, org_str, 0);
-	tokenize2(tokenized_str, org_str, 0);
-	free(tokenized_str);
-	pipe_ba(org_str, 0);
-	struct_filler(cmd, org_str, 0);
-}

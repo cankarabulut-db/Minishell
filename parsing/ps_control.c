@@ -108,41 +108,4 @@ void	input_output_control(char *str, int i)
 	}
 }
 
-int is_quote(char a)
-{
-	if(a == DOUBLEQ)
-		return (1);
-	if(a == SINGLEQ)
-		return (1);
-	return (0);
-}
 
-void	redirects_filler(t_shell *cmd, char *str, t_rdr *count, int i)
-{
-	int	start;
-
-	start = i;
-	if (is_quote(str[i]) && i++)
-		while ((!is_quote(str[i])) && str[i])
-			i++;
-	else
-		while (str[i] != ' ' && str[i] && !ft_rdrconfirmator(str[i]))
-		{
-			if(is_quote(str[i]) && i++)
-			{
-				while(str[i] != ' ' && str[i])
-					i++;
-				break;
-			}
-			i++;
-		}
-	if (count->ic > count->icwhile && count->type == INPUT)
-		cmd->input[count->icwhile++] = quote_remover(ft_substr(str, start, i - start), 0, 0);
-	else if (count->oc > count->ocwhile && count->type == OUTPUT)
-		cmd->output[count->ocwhile++] = quote_remover(ft_substr(str, start, i - start), 0, 0);
-	else if (count->ac > count->acwhile && count->type == APPEND)
-		cmd->append[count->acwhile++] = quote_remover(ft_substr(str, start, i - start), 0, 0);
-	else if (count->hc > count->hcwhile && count->type == HEREDOC)
-		cmd->heredoc[count->hcwhile++] = quote_remover(ft_substr(str, start, i - start), 0, 0);
-	empty_maker(str, ' ', start, i - start);
-}
