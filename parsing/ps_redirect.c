@@ -48,11 +48,9 @@ void redirect_fill_null(t_shell *cmd,t_rdr *rc)
 	if(cmd->output)
 		cmd->output[rc->oc] = NULL;
 }
-void	redirects_filler(t_shell *cmd, char *str, t_rdr *count, int i)
-{
-	int	start;
 
-	start = i;
+int end_of_rdr(char *str, int i)
+{
 	if (is_quote(str[i]) && i++)
 		while ((!is_quote(str[i])) && str[i])
 			i++;
@@ -61,12 +59,21 @@ void	redirects_filler(t_shell *cmd, char *str, t_rdr *count, int i)
 		{
 			if(is_quote(str[i]) == 1 && i++)
 			{
-				while(str[i] != ' ' && str[i])
-					i++;
-				continue;
+				while(!is_quote(str[i]) && str[i])
+						i++;
+					if(is_quote(str[i]) && i++)
+						continue;
 			}
 			i++;
 		}
+		return (i);
+}
+void	redirects_filler(t_shell *cmd, char *str, t_rdr *count, int i)
+{
+	int	start;
+
+	start = i;
+	i = end_of_rdr(str,start);
 	if (count->ic > count->icwhile && count->type == INPUT)
 		cmd->input[count->icwhile++] = quote_remover(ft_substr(str, start, i - start), 0, 0);
 	else if (count->oc > count->ocwhile && count->type == OUTPUT)

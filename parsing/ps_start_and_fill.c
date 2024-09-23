@@ -74,8 +74,9 @@ void single_cmd_fill(t_shell *cmd, char *str, t_rdr *list)
 		redirect_find_fill(cmd, dist_str, 0, list);
 	}
 	cmd_find_fill(cmd, dist_str,0);
-	args_find_fill(cmd, str);
+	args_find_fill(cmd, dist_str);
 	make_empty(dist_str,-1);
+	cmd->next = NULL;
 }
 
 void	struct_filler(t_shell *cmd, char *str, int i)
@@ -97,7 +98,8 @@ void	struct_filler(t_shell *cmd, char *str, int i)
 			for (int i = 0; cmd->append[i]; i++)
 				printf("Append :%s\n",cmd->append[i]);
 		if(cmd->heredoc)
-			printf("var\n");
+			for (int i = 0; cmd->heredoc[i]; i++)
+				printf("heredoc : %s\n", cmd->heredoc[i]);
 		if(cmd->args)
 			for (int i = 0; cmd->args[i]; i++)
 				printf("args : %s\n", cmd->args[i]);
