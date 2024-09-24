@@ -130,4 +130,5 @@ void	redirects_filler(t_shell *cmd, char *str, t_rdr *count, int i);
 void	redirect_find_fill(t_shell *cmd, char *str, int i, t_rdr *rdrcount);
 int ft_rdrconfirmator(char redirect);
 
+
 #endif

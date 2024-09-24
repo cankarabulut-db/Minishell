@@ -35,7 +35,6 @@ void	quote_check(char *str)
 	{
 		printf("QUOTE ERROR\n");
 		free(str);
-		exit(1);
 	}
 }
 

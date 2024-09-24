@@ -1,13 +1,5 @@
 #include "../minishell.h"
 
-void redirect_size(t_rdr *rdrc, char *str)
-{
-	rdrc->ic = redirect_counter(str, 0, INPUT);
-	rdrc->oc = redirect_counter(str, 0, OUTPUT);
-	rdrc->ac = redirect_counter(str, 0, APPEND);
-	rdrc->hc = redirect_counter(str, 0, HEREDOC);
-}
-
 void	redirect_malloc(t_shell *cmd, char *str, t_rdr *rdrc)
 {
 	redirect_size(rdrc, str);
@@ -51,9 +43,35 @@ void redirect_fill_null(t_shell *cmd,t_rdr *rc)
 
 int end_of_rdr(char *str, int i)
 {
-	if (is_quote(str[i]) && i++)
-		while ((!is_quote(str[i])) && str[i])
+	int c;
+
+	c = 0;
+	if (is_quote(str[i]) && i++ && ++c)
+	{
+		//while(str[i])
+		//{
+		//	while(!is_quote(str[i]) && str[i])
+		//	{
+		//		i++;
+		//		if(is_quote(str[i]) && ++i && ++c)
+		//			break;
+		//	}
+		//	if (c % 2 == 0 && !is_quote(str[i]))
+		//		break;
+		//	if(is_quote(str[i]) && str[i] && ++i && ++c)
+		//		continue;
+	
+		//	i++;
+		//}
+		while(str[i] != ' ' && str[i])
+		{
+			while(is_quote(str[i]) && str[i])
+				i++;
+			if(is_quote(str[i]) && ++i)
+				continue;
 			i++;
+		}
+	}
 	else
 		while (str[i] != ' ' && str[i] && !ft_rdrconfirmator(str[i]))
 		{

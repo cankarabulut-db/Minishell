@@ -29,5 +29,4 @@ void	error_msg(char *str1, int i)
 	else if(i == 14)
 		printf("Malloc!\n");
 	free(str1);
-	exit(1);
 }
