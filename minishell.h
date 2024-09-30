@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 16:35:09 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/10 18:52:08 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/09/30 20:26:27 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@
 typedef struct s_shell
 {
 	char				*cmd;
-	char				**flags;
 	char				**input;
 	char				**heredoc;
 	char				**output;
@@ -48,6 +47,8 @@ typedef struct s_shell
 	char				**args;
 	char				**env;
 	int					status;
+	int pid;
+	char **execve_args;
 	struct s_env		*main_env;
 	struct s_shell		*next;
 }	t_shell;
@@ -65,14 +66,6 @@ typedef struct s_rdr
 	int	type;
 	int	listsize;
 }	t_rdr;
-
-typedef struct s_exist
-{
-	int e_input;
-	int e_output;
-	int e_append;
-	int e_heredoc;
-}				t_exist;
 
 typedef struct s_garbage
 {
@@ -130,5 +123,8 @@ void	redirects_filler(t_shell *cmd, char *str, t_rdr *count, int i);
 void	redirect_find_fill(t_shell *cmd, char *str, int i, t_rdr *rdrcount);
 int ft_rdrconfirmator(char redirect);
 
+
+///////////// ahmet
+int file_path(t_shell *shell);
 
 #endif

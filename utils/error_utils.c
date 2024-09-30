@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 15:12:46 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/09 20:16:23 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/09/25 19:04:26 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,5 @@ void	error_msg(char *str1, int i)
 	else if(i == 14)
 		printf("Malloc!\n");
 	free(str1);
+	exit(1);
 }

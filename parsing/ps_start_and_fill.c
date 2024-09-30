@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ps2.c                                              :+:      :+:    :+:   */
+/*   ps_start_and_fill.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:43:20 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/18 00:13:53 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/09/30 20:23:35 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,28 +89,28 @@ void	struct_filler(t_shell *cmd, char *str, int i)
 	else
 			single_cmd_fill(cmd, str, &list);
 
-	for (; cmd!= NULL;)          //REDİRECT VS YOKSA OKUMASIN !
-	{
-		printf("*****BEGİNNİNG*****\n");
-		if(cmd->cmd)
-			printf("cmd : %s\n",cmd->cmd);
-		if(cmd->append)
-			for (int i = 0; cmd->append[i]; i++)
-				printf("Append :%s\n",cmd->append[i]);
-		if(cmd->heredoc)
-			for (int i = 0; cmd->heredoc[i]; i++)
-				printf("heredoc : %s\n", cmd->heredoc[i]);
-		if(cmd->args)
-			for (int i = 0; cmd->args[i]; i++)
-				printf("args : %s\n", cmd->args[i]);
-		if(cmd->input)
-			for (int i = 0; cmd->input[i]; i++)
-				printf("input : %s\n", cmd->input[i]);
-		if(cmd->output)
-			for (int i = 0; cmd->output[i]; i++)
-				printf("output : %s\n", cmd->output[i]);
-		cmd =cmd->next;
-	}
+	// for (; cmd!= NULL;)          //REDİRECT VS YOKSA OKUMASIN !
+	// {
+	// 	printf("*****BEGİNNİNG*****\n");
+	// 	if(cmd->cmd)
+	// 		printf("cmd : %s\n",cmd->cmd);
+	// 	if(cmd->append)
+	// 		for (int i = 0; cmd->append[i]; i++)
+	// 			printf("Append :%s\n",cmd->append[i]);
+	// 	if(cmd->heredoc)
+	// 		for (int i = 0; cmd->heredoc[i]; i++)
+	// 			printf("heredoc : %s\n", cmd->heredoc[i]);
+	// 	if(cmd->args)
+	// 		for (int i = 0; cmd->args[i]; i++)
+	// 			printf("args : %s\n", cmd->args[i]);
+	// 	if(cmd->input)
+	// 		for (int i = 0; cmd->input[i]; i++)
+	// 			printf("input : %s\n", cmd->input[i]);
+	// 	if(cmd->output)
+	// 		for (int i = 0; cmd->output[i]; i++)
+	// 			printf("output : %s\n", cmd->output[i]);
+	// 	cmd =cmd->next;
+	// }
 }
 void	start_parse(char *org_str, t_shell *cmd)
 {
