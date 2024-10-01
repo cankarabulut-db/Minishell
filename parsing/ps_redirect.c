@@ -46,30 +46,26 @@ int end_of_rdr(char *str, int i)
 	int c;
 
 	c = 0;
-	if (is_quote(str[i]) && i++ && ++c)
+	if (is_quote(str[i]))
 	{
-		//while(str[i])
-		//{
-		//	while(!is_quote(str[i]) && str[i])
-		//	{
-		//		i++;
-		//		if(is_quote(str[i]) && ++i && ++c)
-		//			break;
-		//	}
-		//	if (c % 2 == 0 && !is_quote(str[i]))
-		//		break;
-		//	if(is_quote(str[i]) && str[i] && ++i && ++c)
-		//		continue;
-	
-		//	i++;
-		//}
-		while(str[i] != ' ' && str[i])
+		while(str[i])
 		{
-			while(is_quote(str[i]) && str[i])
+			if(is_quote(str[i]) && i++)
+			{
+				while(str[i] && is_quote(str[i]) == 0)
+					i++;
 				i++;
-			if(is_quote(str[i]) && ++i)
 				continue;
-			i++;
+			}
+			else if(str[i] != ' ' && str[i] && i++)
+			{
+				while(str[i] != ' ' && !is_quote(str[i]) && str[i])
+					i++;
+				if(str[i] == ' ')
+					break;
+			}
+			else if(str[i] == ' ')
+				break;
 		}
 	}
 	else
