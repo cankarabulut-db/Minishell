@@ -1,93 +1,90 @@
 #include "../minishell.h"
 
-void	redirect_malloc(t_shell *cmd, char *str, t_rdr *rdrc)
+void redirect_malloc(t_shell *cmd, char *str, t_rdr *rdrc)
 {
 	redirect_size(rdrc, str);
-	if(rdrc->ic > 0)
+	if (rdrc->ic > 0)
 	{
 		cmd->input = malloc(sizeof(char *) * rdrc->ic + 1);
-		if(!cmd->input)
-			error_msg(str,14);
+		if (!cmd->input)
+			error_msg(str, 14);
 	}
-	if(rdrc->oc > 0)
+	if (rdrc->oc > 0)
 	{
 		cmd->output = malloc(sizeof(char *) * rdrc->oc + 1);
-		if(!cmd->output)
-			error_msg(str,14);
+		if (!cmd->output)
+			error_msg(str, 14);
 	}
-	if(rdrc->hc > 0)
+	if (rdrc->hc > 0)
 	{
 		cmd->heredoc = malloc(sizeof(char *) * rdrc->hc + 1);
-		if(!cmd->heredoc)
-			error_msg(str,14);
+		if (!cmd->heredoc)
+			error_msg(str, 14);
 	}
-	if(rdrc->ac > 0)
+	if (rdrc->ac > 0)
 	{
 		cmd->append = malloc(sizeof(char *) * rdrc->ac + 1);
-		if(!cmd->append)
-			error_msg(str,14);
+		if (!cmd->append)
+			error_msg(str, 14);
 	}
 }
 
-void redirect_fill_null(t_shell *cmd,t_rdr *rc)
+void redirect_fill_null(t_shell *cmd, t_rdr *rc)
 {
-	if(cmd->append)
+	if (cmd->append)
 		cmd->append[rc->ac] = NULL;
-	if(cmd->heredoc)
+	if (cmd->heredoc)
 		cmd->heredoc[rc->hc] = NULL;
-	if(cmd->input)
+	if (cmd->input)
 		cmd->input[rc->ic] = NULL;
-	if(cmd->output)
+	if (cmd->output)
 		cmd->output[rc->oc] = NULL;
 }
 
 int end_of_rdr(char *str, int i)
 {
-	int c;
-
-	c = 0;
 	if (is_quote(str[i]))
 	{
-		while(str[i])
+		while (str[i])
 		{
-			if(is_quote(str[i]) && i++)
+			if (is_quote(str[i]) && i++)
 			{
-				while(str[i] && is_quote(str[i]) == 0)
+				while (str[i] && is_quote(str[i]) == 0)
 					i++;
 				i++;
 				continue;
 			}
-			else if(str[i] != ' ' && str[i] && i++)
+			else if (str[i] != ' ' && str[i] && i++)
 			{
-				while(str[i] != ' ' && !is_quote(str[i]) && str[i])
+				while (str[i] != ' ' && !is_quote(str[i]) && str[i])
 					i++;
-				if(str[i] == ' ')
+				if (str[i] == ' ')
 					break;
 			}
-			else if(str[i] == ' ')
+			else if (str[i] == ' ')
 				break;
 		}
 	}
 	else
 		while (str[i] != ' ' && str[i] && !ft_rdrconfirmator(str[i]))
 		{
-			if(is_quote(str[i]) == 1 && i++)
+			if (is_quote(str[i]) == 1 && i++)
 			{
-				while(!is_quote(str[i]) && str[i])
-						i++;
-					if(is_quote(str[i]) && i++)
-						continue;
+				while (!is_quote(str[i]) && str[i])
+					i++;
+				if (is_quote(str[i]) && i++)
+					continue;
 			}
 			i++;
 		}
-		return (i);
+	return (i);
 }
-void	redirects_filler(t_shell *cmd, char *str, t_rdr *count, int i)
+void redirects_filler(t_shell *cmd, char *str, t_rdr *count, int i)
 {
-	int	start;
+	int start;
 
 	start = i;
-	i = end_of_rdr(str,start);
+	i = end_of_rdr(str, start);
 	if (count->ic > count->icwhile && count->type == INPUT)
 		cmd->input[count->icwhile++] = quote_remover(ft_substr(str, start, i - start), 0, 0);
 	else if (count->oc > count->ocwhile && count->type == OUTPUT)
@@ -99,14 +96,14 @@ void	redirects_filler(t_shell *cmd, char *str, t_rdr *count, int i)
 	empty_maker(str, ' ', start, i - start);
 }
 
-void	redirect_find_fill(t_shell *cmd, char *str, int i, t_rdr *rdrcount)
+void redirect_find_fill(t_shell *cmd, char *str, int i, t_rdr *rdrcount)
 {
 	rdr_makezero(rdrcount);
 	redirect_malloc(cmd, str, rdrcount);
-	redirect_fill_null(cmd,rdrcount);
+	redirect_fill_null(cmd, rdrcount);
 	while (str[i])
 	{
-		if (str[i] == INPUT || str[i] == OUTPUT || \
+		if (str[i] == INPUT || str[i] == OUTPUT ||
 			str[i] == APPEND || str[i] == HEREDOC)
 		{
 			rdrcount->type = str[i];
@@ -116,7 +113,7 @@ void	redirect_find_fill(t_shell *cmd, char *str, int i, t_rdr *rdrcount)
 				str[i + 1] = ' ';
 				i += 2;
 			}
-			else if(rdrcount->type == INPUT || rdrcount->type == OUTPUT)
+			else if (rdrcount->type == INPUT || rdrcount->type == OUTPUT)
 				str[i++] = ' ';
 			while (str[i] == ' ')
 				i++;

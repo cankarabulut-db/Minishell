@@ -125,6 +125,9 @@ int ft_rdrconfirmator(char redirect);
 
 
 ///////////// ahmet
-int file_path(t_shell *shell);
+int	ft_strarrlen(char **str_array);
+int	get_path_index(t_shell *shell);
+void	load_env_vars(t_shell *shell);
+char	*find_executable_path(t_shell *shell, int path_index);
 
 #endif

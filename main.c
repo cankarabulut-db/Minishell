@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 void struct_initializer(t_shell *cmd)
 {
 	cmd->append = NULL;
@@ -23,85 +24,71 @@ void struct_initializer(t_shell *cmd)
 	cmd->output = NULL;
 }
 
-void tab_to_space(char *str,int i)
+void tab_to_space(char *str, int i)
 {
-	while(str[++i])
+	while (str[++i])
 		if (str[i] == '\t')
-			str[i] = 32;	
+			str[i] = 32;
 }
 
-void	take_env(t_shell *cmd)
+void join_cmd_arg_part1(t_shell *mini, int *arg_c, int *i)
 {
-	int	i;
-	extern char **environ;
-
-	i = 0;
-	while(environ[i])
-		i++;
-	cmd->env = malloc(sizeof(char *) * (i + 1));
-	i = 0;
-	while (environ[i])
-	{
-		cmd->env[i] = ft_strdup(environ[i]);
-		i++;
-	}
-	cmd->env[i] = NULL;
-	
+	*arg_c = ft_strarrlen(mini->args);
+	mini->execve_args = malloc(sizeof(char *) * (*arg_c + 2));
+	mini->execve_args[0] = ft_strdup(mini->cmd);
+	*i = 1;
 }
 
-char *asdad(t_shell *cmd, int i)
+void join_cmd_arg_part2(t_shell *mini, int *i)
 {
-	char *trimmed;
-	char **str;
-	char *jd;
-	char *sk;
-
-	int len = ft_strlen(cmd->env[i]);
-	trimmed = ft_substr(cmd->env[i], 5, len - 4);
-	str = ft_split(cmd->env[i], ':');
-	i = 0;
-	while (str[i])
+	while (mini->args[*i - 1])
 	{
-		jd = ft_strjoin(str[i], "/");
-		sk = ft_strjoin(jd, cmd->cmd);
-		free(jd);
-		if (access(sk, X_OK) == 0)
-		{
-			return (sk);
-		}
-		free (sk);
-		i++;
+		mini->execve_args[*i] = ft_strdup(mini->args[*i - 1]);
+		(*i)++;
 	}
-	return (NULL);
+	mini->execve_args[*i] = NULL;
 }
 
-int	ft_strarrlen(char **str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		i++;
-	}
-	return (i);
-}
-
-void	join_cmd_arg(t_shell *mini)
+void join_cmd_arg(t_shell *mini)
 {
 	int arg_c;
-	int	i;
+	int i;
 
-	i = 1;
-	arg_c = ft_strarrlen(mini->args);
-	mini->execve_args = malloc(sizeof(char *) * (arg_c + 2));
-	mini->execve_args[0] = ft_strdup(mini->cmd);
-	while(mini->args[i - 1])
+	join_cmd_arg_part1(mini, &arg_c, &i);
+	join_cmd_arg_part2(mini, &i);
+}
+
+void start_cmd_part1(t_shell **cmd)
+{
+	*cmd = malloc(sizeof(t_shell));
+	load_env_vars(*cmd); 
+}
+
+void start_cmd_part2(t_shell *cmd, char **rcmd, char **temp)
+{
+	(void)cmd;
+	*rcmd = readline("minishell>");
+	if (!*rcmd)
 	{
-		mini->execve_args[i] = ft_strdup(mini->args[i - 1]);
-		i++;
+		printf("exit\n");
+		exit(EXIT_FAILURE);
 	}
-	mini->execve_args[i] = NULL;
+	add_history(*rcmd);
+	tab_to_space(*rcmd, -1);
+	*temp = ft_strtrim(*rcmd, " ");
+}
+
+void start_cmd_part3(t_shell *cmd)
+{
+	int path_index = get_path_index(cmd); 
+	char *find_path = find_executable_path(cmd, path_index);
+	cmd->pid = fork();
+	if (cmd->pid == 0)
+	{
+		execve(find_path, cmd->execve_args, cmd->env);
+		exit(0);
+	}
+	waitpid(cmd->pid, 0, 0);
 }
 
 void start_cmd(char **env)
@@ -109,39 +96,24 @@ void start_cmd(char **env)
 	t_shell *cmd;
 	char *temp;
 	char *rcmd;
-	cmd = malloc(sizeof(t_shell));
-	take_env(cmd);
+
+	start_cmd_part1(&cmd);
 	(void)env;
-	while(1)
+	while (1)
 	{
 		struct_initializer(cmd);
-		rcmd = readline("minishell>");
-		if(!rcmd)
-		{
-			printf("exit\n");
-			exit(EXIT_FAILURE);
-		}
-		add_history(rcmd);
-		tab_to_space(rcmd, -1);
-		temp = ft_strtrim(rcmd," ");
-		start_parse(temp,cmd);
+		start_cmd_part2(cmd, &rcmd, &temp);
+		start_parse(temp, cmd);
 		join_cmd_arg(cmd);
-		int z = file_path(cmd);
-		char *erkoc = asdad(cmd, z);
-		cmd->pid = fork();
-		if (cmd->pid == 0)
-		{
-			execve(erkoc, cmd->execve_args, cmd->env);
-			exit(0);
-		}
-		waitpid(cmd->pid, 0, 0);
+		start_cmd_part3(cmd);
 		free(temp);
 	}
 }
 
-int main(int ac, char *av[],char **env) {
+int main(int ac, char *av[], char **env)
+{
 	(void)av;
-   	if(ac != 1)
-		error_msg("Too much arguments.",99);
+	if (ac != 1)
+		error_msg("Too much arguments.", 99);
 	start_cmd(env);
 }
