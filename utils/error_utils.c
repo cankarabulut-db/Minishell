@@ -6,7 +6,7 @@
 /*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 15:12:46 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/25 19:04:26 by akar             ###   ########.fr       */
+/*   Updated: 2024/10/12 16:44:44 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,17 @@
 void	error_msg(char *str1, int i)
 {
 	if (i == PIPE)
-		printf("kurdishell : syntax error near unexpected token `|`\n");
+		printf("minishell : syntax error near unexpected token `|`\n");
 	else if (i == 1)
-		printf("kurdishell : syntax error near unexpected token `newline'\n");
+		printf("minishell : syntax error near unexpected token `newline'\n");
 	else if (i == INPUT)
-		printf("kurdishell : syntax error near unexpected token `<'\n");
+		printf("minishell : syntax error near unexpected token `<'\n");
 	else if (i == OUTPUT)
-		printf("kurdishell : syntax error near unexpected token `>'\n");
+		printf("minishell : syntax error near unexpected token `>'\n");
 	else if (i == HEREDOC)
-		printf("kurdishell : syntax error near unexpected token `<<'\n");
+		printf("minishell : syntax error near unexpected token `<<'\n");
 	else if (i == APPEND)
-		printf("kurdishell : syntax error near unexpected token `>>'\n");
+		printf("minishell : syntax error near unexpected token `>>'\n");
 	else if(i == 14)
 		printf("Malloc!\n");
 	free(str1);

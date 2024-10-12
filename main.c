@@ -6,7 +6,7 @@
 /*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:59:11 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/30 20:30:40 by akar             ###   ########.fr       */
+/*   Updated: 2024/10/12 17:09:52 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void tab_to_space(char *str, int i)
 
 void join_cmd_arg_part1(t_shell *mini, int *arg_c, int *i)
 {
-	*arg_c = ft_strarrlen(mini->args);
+	*arg_c = ft_strplen(mini->args);
 	mini->execve_args = malloc(sizeof(char *) * (*arg_c + 2));
 	mini->execve_args[0] = ft_strdup(mini->cmd);
 	*i = 1;

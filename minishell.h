@@ -6,7 +6,7 @@
 /*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 16:35:09 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/30 20:26:27 by akar             ###   ########.fr       */
+/*   Updated: 2024/10/12 17:09:37 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,6 @@ int ft_rdrconfirmator(char redirect);
 
 
 ///////////// ahmet
-int	ft_strarrlen(char **str_array);
 int	get_path_index(t_shell *shell);
 void	load_env_vars(t_shell *shell);
 char	*find_executable_path(t_shell *shell, int path_index);

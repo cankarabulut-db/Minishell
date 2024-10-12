@@ -1,17 +1,5 @@
 #include "../minishell.h"
 
-int	ft_strarrlen(char **str_array)
-{
-	int	index;
-
-	index = 0;
-	while (str_array[index])
-	{
-		index++;
-	}
-	return (index);
-}
-
 int	get_path_index(t_shell *shell)
 {
 	int		index;
@@ -33,8 +21,8 @@ int	get_path_index(t_shell *shell)
 
 void	load_env_vars(t_shell *shell)
 {
-	int		index;
-	extern char **environ;
+	int			index;
+	extern char	**environ;
 
 	index = 0;
 	while (environ[index])
@@ -49,30 +37,41 @@ void	load_env_vars(t_shell *shell)
 	shell->env[index] = NULL;
 }
 
-char	*find_executable_path(t_shell *shell, int path_index)
+void	func_total(t_shell *shell)
 {
+	int		env_len;
 	char	*trimmed_env;
 	char	**path_directories;
+
+	env_len = ft_strplen(shell->env);
+	trimmed_env = ft_substr(shell->env[path_index], 5, env_len - 4);
+	path_directories = ft_split(trimmed_env, ':');
+}
+
+char	*find_executable_path(t_shell *shell, int path_index)
+{
 	char	*joined_path;
 	char	*full_cmd_path;
 	int		index;
-	int		env_len;
+	func_total();
 
-	env_len = ft_strlen(shell->env[path_index]);
-	trimmed_env = ft_substr(shell->env[path_index], 5, env_len - 4);
-	path_directories = ft_split(trimmed_env, ':');
-	index = 0;
-	while (path_directories[index])
+	index = -1;
+	while (path_directories[++index])
 	{
-		joined_path = ft_strjoin(path_directories[index], "/");
-		full_cmd_path = ft_strjoin(joined_path, shell->cmd);
-		free(joined_path);
-		if (access(full_cmd_path, X_OK) == 0)
+		if (shell->cmd && shell->cmd[0] && shell->cmd[0] == '/')
+			full_cmd_path = shell->cmd;
+		else
 		{
-			return (full_cmd_path);
+			joined_path = ft_strjoin(path_directories[index], "/");
+			full_cmd_path = ft_strjoin(joined_path, shell->cmd);
+			free(joined_path);
 		}
+		if (access(full_cmd_path, X_OK) == 0)
+			return (full_cmd_path);
 		free(full_cmd_path);
-		index++;
 	}
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(shell->cmd, 2);
+	ft_putstr_fd(": command not found\n", 2);
 	return (NULL);
 }

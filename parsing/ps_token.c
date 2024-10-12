@@ -1,18 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ps.c                                               :+:      :+:    :+:   */
+/*   ps_token.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:59:13 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/13 17:29:02 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/10/12 17:04:09 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	quote_check(char *str)
+// Tırnak kontorlü yapar eğer char * içerisinde açık bir tırnak varsa hata döndürür.
+void	quote_check(char *str) 
 {
 	int		i;
 	int		q_count;
@@ -38,6 +39,7 @@ void	quote_check(char *str)
 	}
 }
 
+// Bu fonksiyon bir char * içerisinde bulunan tek ve çift tırnakları kaldırır ve tırnaklar olmadan bir dize döner
 char	*quote_remover(char *str, int i, int j)
 {
 	char	*removed;
@@ -60,6 +62,7 @@ char	*quote_remover(char *str, int i, int j)
 	return (removed);
 }
 
+// Çift veya tek tırnak bulunursa bunların yerine özel sabitler kullanarak dizeyi günceller
 void	tokenize1(char *str, char *org_str, int i)
 {
 	while (str[i])
@@ -88,6 +91,7 @@ void	tokenize1(char *str, char *org_str, int i)
 	}
 }
 
+// output,input, append, heredoc veya pipe bulunursa bunların yerine özel sabitler kullanarak dizeyi günceller
 void	tokenize2(char *str, char *org_str, int i) // str free
 {
 	while (str[i])
