@@ -1,9 +1,9 @@
 #include "../minishell.h"
 
-int get_path_index(t_shell *shell)
+int	get_path_index(t_shell *shell)
 {
-	int index;
-	char *env_var;
+	int		index;
+	char	*env_var;
 
 	index = 0;
 	while (shell->env[index])
@@ -20,10 +20,10 @@ int get_path_index(t_shell *shell)
 	return (-1);
 }
 
-void load_env_vars(t_shell *shell)
+void	load_env_vars(t_shell *shell)
 {
-	int index;
-	extern char **environ;
+	int			index;
+	extern char	**environ;
 
 	index = 0;
 	while (environ[index])
@@ -38,26 +38,37 @@ void load_env_vars(t_shell *shell)
 	shell->env[index] = NULL;
 }
 
-char **func_total(t_shell *shell, int path_index)
+char	**func_total(t_shell *shell, int path_index)
 {
-	int env_len;
-	char *trimmed_env;
-	char **path_directories;
+	int		env_len;
+	char	*trimmed_env;
+	char	**path_directories;
 
 	env_len = ft_strlen(shell->env[path_index]);
 	trimmed_env = ft_substr(shell->env[path_index], 5, env_len - 5);
 	path_directories = ft_split(trimmed_env, ':');
-	free(trimmed_env);
+	free(trimmed_env); 
 	return path_directories;
+}
+
+void free_path_dirs(char **path_dirs)
+{
+	int index = 0;
+	while (path_dirs[index])
+	{
+		free(path_dirs[index]);
+		index++;
+	}
+	free(path_dirs);
 }
 
 char *find_executable_path(t_shell *shell, int path_index)
 {
 	char **path_dirs = func_total(shell, path_index);
-	char *joined_path, *full_cmd_path;
-	int index = -1, i;
+	char *joined_path, *full_cmd_path = NULL;
+	int index = 0;
 
-	while (path_dirs[++index])
+	while (path_dirs[index])
 	{
 		joined_path = ft_strjoin(path_dirs[index], "/");
 		full_cmd_path = ft_strjoin(joined_path, shell->cmd);
@@ -66,14 +77,13 @@ char *find_executable_path(t_shell *shell, int path_index)
 			break;
 		free(full_cmd_path);
 		full_cmd_path = NULL;
+		index++;
 	}
-	for (i = 0; path_dirs[i]; i++)
-		free(path_dirs[i]);
-	free(path_dirs);
+	free_path_dirs(path_dirs);
 
 	if (!full_cmd_path)
 		ft_putstr_fd("minishell: ", 2), ft_putstr_fd(shell->cmd, 2), 
 		ft_putstr_fd(": command not found\n", 2);
 
-	return (full_cmd_path);
+	return full_cmd_path;
 }
