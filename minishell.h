@@ -129,4 +129,5 @@ int	get_path_index(t_shell *shell);
 void	load_env_vars(t_shell *shell);
 char	*find_executable_path(t_shell *shell, int path_index);
 
+
 #endif
