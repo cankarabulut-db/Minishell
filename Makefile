@@ -1,6 +1,6 @@
 NAME = minishell
 SRC = main.c parsing/ps_token.c parsing/ps_control.c parsing/ps_start_and_fill.c parsing/ps_args.c parsing/ps_redirect.c \
-		utils/ft_parse_utils2.c utils/error_utils.c utils/ft_utils.c utils/ft_parse_utils.c execute/find_file_path.c
+		utils/ft_parse_utils2.c utils/error_utils.c utils/ft_utils.c utils/ft_parse_utils.c execute/find_file_path.c execute/execute_pipe.c
 
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra

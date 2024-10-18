@@ -58,10 +58,10 @@ void join_cmd_arg(t_shell *mini)
 	join_cmd_arg_part2(mini, &i);
 }
 
-void start_cmd_part1(t_shell **cmd)
+void start_cmd_part1(t_shell **cmd, char **env)
 {
 	*cmd = malloc(sizeof(t_shell));
-	load_env_vars(*cmd); 
+	load_env_vars(*cmd, env); 
 }
 
 void start_cmd_part2(t_shell *cmd, char **rcmd, char **temp)
@@ -80,15 +80,24 @@ void start_cmd_part2(t_shell *cmd, char **rcmd, char **temp)
 
 void start_cmd_part3(t_shell *cmd)
 {
-	int path_index = get_path_index(cmd); 
-	char *find_path = find_executable_path(cmd, path_index);
-	cmd->pid = fork();
-	if (cmd->pid == 0)
-	{
-		execve(find_path, cmd->execve_args, cmd->env);
-		exit(0);
-	}
-	waitpid(cmd->pid, 0, 0);
+    int path_index = get_path_index(cmd); 
+    char *find_path = find_executable_path(cmd, path_index);
+
+    setup_redirections(cmd);
+    process_heredoc(cmd);
+
+    cmd->pid = fork();
+    if (cmd->pid < 0) {
+        perror("fork failed");
+        exit(EXIT_FAILURE);
+    }
+    if (cmd->pid == 0)
+    {
+        execve(find_path, cmd->execve_args, cmd->env);
+        perror("execve failed");  // execve başarısız olursa hata mesajı
+        exit(EXIT_FAILURE); // Eğer execve başarısız olursa çıkış yap.
+    }
+    waitpid(cmd->pid, NULL, 0);
 }
 
 void start_cmd(char **env)
@@ -97,8 +106,7 @@ void start_cmd(char **env)
 	char *temp;
 	char *rcmd;
 
-	start_cmd_part1(&cmd);
-	(void)env;
+	start_cmd_part1(&cmd, env);
 	while (1)
 	{
 		struct_initializer(cmd);

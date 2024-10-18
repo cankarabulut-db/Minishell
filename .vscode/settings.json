@@ -9,7 +9,8 @@
 		"istream": "c",
 		"locale": "c",
 		"unordered_map": "c",
-		"ostream": "c"
+		"ostream": "c",
+		"minishell.h": "c"
 	},
 	"C_Cpp.errorSquiggles": "disabled"
 }

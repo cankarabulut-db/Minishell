@@ -125,9 +125,12 @@ int ft_rdrconfirmator(char redirect);
 
 
 ///////////// ahmet
-int	get_path_index(t_shell *shell);
-void	load_env_vars(t_shell *shell);
+int get_path_index(t_shell *shell);
+void	load_env_vars(t_shell *shell, char **environment);
 char	*find_executable_path(t_shell *shell, int path_index);
-
+char	**split_path_directories(t_shell *shell, int path_index);
+void	free_path_directories(char **path_dirs);
+void setup_redirections(t_shell *cmd);
+void process_heredoc(t_shell *cmd);
 
 #endif
