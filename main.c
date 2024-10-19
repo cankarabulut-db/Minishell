@@ -104,7 +104,6 @@ void start_cmd_part3(t_shell *cmd)
     }
 }
 
-
 void start_cmd(char **env)
 {
     t_shell *cmd;
@@ -131,7 +130,6 @@ void start_cmd(char **env)
         free(rcmd);
     }
 }
-
 
 int main(int ac, char *av[], char **env)
 {
