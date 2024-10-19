@@ -80,43 +80,58 @@ void start_cmd_part2(t_shell *cmd, char **rcmd, char **temp)
 
 void start_cmd_part3(t_shell *cmd)
 {
-    int path_index = get_path_index(cmd); 
+    int path_index = get_path_index(cmd);
     char *find_path = find_executable_path(cmd, path_index);
 
-    setup_redirections(cmd);
-    process_heredoc(cmd);
-
     cmd->pid = fork();
-    if (cmd->pid < 0) {
+    if (cmd->pid < 0)
+    {
         perror("fork failed");
         exit(EXIT_FAILURE);
     }
-    if (cmd->pid == 0)
+    
+    if (cmd->pid == 0) 
     {
+		setup_redirections(cmd);
+		    process_heredoc(cmd);
+
         execve(find_path, cmd->execve_args, cmd->env);
-        perror("execve failed");  // execve başarısız olursa hata mesajı
-        exit(EXIT_FAILURE); // Eğer execve başarısız olursa çıkış yap.
+        exit(EXIT_FAILURE);
     }
-    waitpid(cmd->pid, NULL, 0);
+    else 
+    {
+        waitpid(cmd->pid, NULL, 0); 
+    }
 }
+
 
 void start_cmd(char **env)
 {
-	t_shell *cmd;
-	char *temp;
-	char *rcmd;
+    t_shell *cmd;
+    char *temp;
+    char *rcmd;
 
-	start_cmd_part1(&cmd, env);
-	while (1)
-	{
-		struct_initializer(cmd);
-		start_cmd_part2(cmd, &rcmd, &temp);
-		start_parse(temp, cmd);
-		join_cmd_arg(cmd);
-		start_cmd_part3(cmd);
-		free(temp);
-	}
+    start_cmd_part1(&cmd, env);  
+    while (1)
+    {
+        struct_initializer(cmd);
+        start_cmd_part2(cmd, &rcmd, &temp);
+        
+        if (!rcmd || strlen(rcmd) == 0) 
+        {
+            free(rcmd); 
+            continue;
+        }
+
+        start_parse(temp, cmd); 
+        join_cmd_arg(cmd); 
+        start_cmd_part3(cmd); 
+
+        free(temp);
+        free(rcmd);
+    }
 }
+
 
 int main(int ac, char *av[], char **env)
 {
