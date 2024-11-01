@@ -6,7 +6,7 @@
 /*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:43:20 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/09/30 20:23:35 by akar             ###   ########.fr       */
+/*   Updated: 2024/11/01 19:52:36 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,24 +62,27 @@ void	split_pipe_and_fill(t_shell *cmd, char *str, int i, t_rdr *listsize)
 }
 
 
-void single_cmd_fill(t_shell *cmd, char *str, t_rdr *list)
+int single_cmd_fill(t_shell *cmd, char *str, t_rdr *list)
 {
 	char *dist_str; 
 
 	dist_str = ft_strdup(str);
 	if(check_redirect(str))
 	{
-		heredoc_append_control(dist_str, 0);
-		input_output_control(dist_str, 0);
+		if(heredoc_append_control(dist_str, 0) == -1)
+			return (-1);
+		if(input_output_control(dist_str, 0) == -1)
+			return (-1);
 		redirect_find_fill(cmd, dist_str, 0, list);
 	}
 	cmd_find_fill(cmd, dist_str,0);
 	args_find_fill(cmd, dist_str);
 	make_empty(dist_str,-1);
 	cmd->next = NULL;
+	return (0);
 }
 
-void	struct_filler(t_shell *cmd, char *str, int i)
+int	struct_filler(t_shell *cmd, char *str, int i)
 {
 	t_rdr	list;
 
@@ -87,41 +90,30 @@ void	struct_filler(t_shell *cmd, char *str, int i)
 	if (ft_exist(str, PIPE, 0))
 			split_pipe_and_fill(cmd, str, 0, &list);
 	else
-			single_cmd_fill(cmd, str, &list);
-
-	// for (; cmd!= NULL;)          //REDİRECT VS YOKSA OKUMASIN !
-	// {
-	// 	printf("*****BEGİNNİNG*****\n");
-	// 	if(cmd->cmd)
-	// 		printf("cmd : %s\n",cmd->cmd);
-	// 	if(cmd->append)
-	// 		for (int i = 0; cmd->append[i]; i++)
-	// 			printf("Append :%s\n",cmd->append[i]);
-	// 	if(cmd->heredoc)
-	// 		for (int i = 0; cmd->heredoc[i]; i++)
-	// 			printf("heredoc : %s\n", cmd->heredoc[i]);
-	// 	if(cmd->args)
-	// 		for (int i = 0; cmd->args[i]; i++)
-	// 			printf("args : %s\n", cmd->args[i]);
-	// 	if(cmd->input)
-	// 		for (int i = 0; cmd->input[i]; i++)
-	// 			printf("input : %s\n", cmd->input[i]);
-	// 	if(cmd->output)
-	// 		for (int i = 0; cmd->output[i]; i++)
-	// 			printf("output : %s\n", cmd->output[i]);
-	// 	cmd =cmd->next;
-	// }
+	{
+		if(single_cmd_fill(cmd, str, &list) == -1)
+			return -1;
+		else
+			(void)single_cmd_fill(cmd, str, &list);
+	}
+	return (0);
 }
-void	start_parse(char *org_str, t_shell *cmd)
+int	start_parse(char *org_str, t_shell *cmd)
 {
 	char	*tokenized_str;
 
 	(void)cmd;
 	tokenized_str = ft_strdup(org_str);
-	quote_check(org_str);
+	if(quote_check(org_str) == -1)
+		return -1;
 	tokenize1(tokenized_str, org_str, 0);
 	tokenize2(tokenized_str, org_str, 0);
 	free(tokenized_str);
-	pipe_ba(org_str, 0);
-	struct_filler(cmd, org_str, 0);
+	if(pipe_ba(org_str, 0) == -1)
+		return (-1);
+	if(struct_filler(cmd, org_str, 0) == -1)
+		return (-1);
+	else
+		(void)struct_filler(cmd, org_str, 0);
+	return (0);
 }

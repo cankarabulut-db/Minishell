@@ -6,7 +6,7 @@
 /*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:59:11 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/10/12 17:09:52 by akar             ###   ########.fr       */
+/*   Updated: 2024/11/01 19:52:37 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,10 @@ void start_cmd(char **env)
             continue;
         }
 
-        start_parse(temp, cmd); 
+        if(start_parse(temp, cmd) == -1)
+			continue;
+		else
+			(void)start_parse(temp, cmd); 
         join_cmd_arg(cmd); 
         start_cmd_part3(cmd); 
 

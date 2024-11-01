@@ -6,14 +6,14 @@
 /*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:59:13 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/10/12 17:04:09 by akar             ###   ########.fr       */
+/*   Updated: 2024/11/01 19:36:41 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 // Tırnak kontorlü yapar eğer char * içerisinde açık bir tırnak varsa hata döndürür.
-void	quote_check(char *str) 
+int	quote_check(char *str) 
 {
 	int		i;
 	int		q_count;
@@ -34,9 +34,10 @@ void	quote_check(char *str)
 	}
 	if (q_count % 2 != 0)
 	{
-		printf("QUOTE ERROR\n");
+		return (error_msg("QUOTE ERROR",15));
 		free(str);
 	}
+	return (0);
 }
 
 // Bu fonksiyon bir char * içerisinde bulunan tek ve çift tırnakları kaldırır ve tırnaklar olmadan bir dize döner

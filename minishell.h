@@ -6,7 +6,7 @@
 /*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 16:35:09 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/10/12 17:09:37 by akar             ###   ########.fr       */
+/*   Updated: 2024/11/01 19:48:06 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,31 +81,31 @@ typedef struct s_env
 int		ft_exist(char *str, char a, int i);	
 int		ft_strplen(char **str);
 void	split_pipe_and_fill(t_shell *cmd, char *str, int i, t_rdr *listsize);
-void	error_msg(char *str1, int i);
-void	start_parse(char *org_str, t_shell *cmd);
+int	error_msg(char *str1, int i);
+int	start_parse(char *org_str, t_shell *cmd);
 void	start_cmd(char **env);
 
 void	empty_maker(char *str, char a, int start, int len);
 void	struct_initializer(t_shell *cmd);
 
-void	struct_filler(t_shell *cmd, char *str, int i);
+int	struct_filler(t_shell *cmd, char *str, int i);
 
-void	input_output_control(char *str, int i);
-void	heredoc_append_control(char *str, int i);
+int	input_output_control(char *str, int i);
+int	heredoc_append_control(char *str, int i);
 void	tokenize1(char *str, char *org_str, int i);
 void	tokenize2(char *str, char *org_str, int i);
 void	rdr_makezero(t_rdr *count);
 
 char	*quote_remover(char *str, int i, int j);
-void	quote_check(char *str);
-void	pipe_ba(char *str, int i);
+int	quote_check(char *str);
+int	pipe_ba(char *str, int i);
 void	redirect_find_fill(t_shell *cmd, char *str, int i, t_rdr *rdrcount);
 void	redirects_filler(t_shell *cmd, char *str, t_rdr *count, int i);
 int		redirect_counter(char *str, int i, int redirectType);
 
 void tab_to_space(char *str,int i);
 void free_double_ptr(char **str);
-void single_cmd_fill(t_shell *cmd, char *str, t_rdr *list);
+int single_cmd_fill(t_shell *cmd, char *str, t_rdr *list);
 void free_list(t_shell *cmd);
 int is_quote(char a);
 void args_quote_passer(char *str, int i);
