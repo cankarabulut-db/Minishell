@@ -93,7 +93,7 @@ void start_cmd_part3(t_shell *cmd)
     if (cmd->pid == 0) 
     {
 		setup_redirections(cmd);
-		    process_heredoc(cmd);
+		process_heredoc(cmd);
 
         execve(find_path, cmd->execve_args, cmd->env);
         exit(EXIT_FAILURE);
