@@ -36,6 +36,9 @@
 # define OUTPUT 6 // >
 # define INPUT 7 // <
 # define PIPE 8
+# define MAIN_P 9
+# define CHILD_P 10
+# define HEREDOC_P 11 
 
 typedef struct s_shell
 {
@@ -132,5 +135,8 @@ char	**split_path_directories(t_shell *shell, int path_index);
 void	free_path_directories(char **path_dirs);
 void setup_redirections(t_shell *cmd);
 void process_heredoc(t_shell *cmd);
+void handle_heredoc(int status);
+void handle_sigint(int sig);
+void set_signal(int mode);
 
 #endif

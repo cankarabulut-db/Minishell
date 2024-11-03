@@ -122,10 +122,11 @@ void start_cmd(char **env)
             continue;
         }
 
-        if(start_parse(temp, cmd) == -1)
-			continue;
-		else
-			(void)start_parse(temp, cmd); 
+        if (start_parse(temp, cmd) == -1)
+            continue;
+        else
+            (void)start_parse(temp, cmd); 
+
         join_cmd_arg(cmd); 
         start_cmd_part3(cmd); 
 
@@ -136,8 +137,13 @@ void start_cmd(char **env)
 
 int main(int ac, char *av[], char **env)
 {
-	(void)av;
-	if (ac != 1)
-		error_msg("Too much arguments.", 99);
-	start_cmd(env);
+    (void)av;
+    if (ac != 1)
+        error_msg("Too many arguments.", 99);
+
+    set_signal(MAIN_P);
+
+    start_cmd(env);
+    
+    return 0;
 }
