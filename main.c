@@ -3,14 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
+/*   By: ahmeetkaar <ahmeetkaar@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:59:11 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/01 19:52:37 by akar             ###   ########.fr       */
+/*   Updated: 2024/11/06 19:15:11 by ahmeetkaar       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void one_cmd(t_shell *cmd)
+{
+    int path_index = get_path_index(cmd);
+    char *find_path = find_executable_path(cmd, path_index);
+	//cmd->pid = fork();
+	// if (cmd->pid == 0)
+	//{
+        execve(find_path, cmd->execve_args, cmd->env);
+		exit(0);
+	//}
+}
+void one_cmd_2(t_shell *cmd)
+{
+    int path_index = get_path_index(cmd);
+    char *find_path = find_executable_path(cmd, path_index);
+    cmd->pid = fork();
+	if (cmd->pid == 0)
+	{
+        execve(find_path, cmd->execve_args, cmd->env);
+		exit(0);
+	}
+}
 
 void struct_initializer(t_shell *cmd)
 {
@@ -53,9 +76,14 @@ void join_cmd_arg(t_shell *mini)
 {
 	int arg_c;
 	int i;
-
-	join_cmd_arg_part1(mini, &arg_c, &i);
-	join_cmd_arg_part2(mini, &i);
+    t_shell *temp = mini;
+    while (mini)
+    {
+        join_cmd_arg_part1(mini, &arg_c, &i);
+        join_cmd_arg_part2(mini, &i);
+        mini = mini->next;
+    }
+    mini = temp;
 }
 
 void start_cmd_part1(t_shell **cmd, char **env)
@@ -78,29 +106,59 @@ void start_cmd_part2(t_shell *cmd, char **rcmd, char **temp)
 	*temp = ft_strtrim(*rcmd, " ");
 }
 
-void start_cmd_part3(t_shell *cmd)
+
+void  pipe_exec(t_shell *cmd)
 {
-    int path_index = get_path_index(cmd);
-    char *find_path = find_executable_path(cmd, path_index);
+	int	fd[2];
 
-    cmd->pid = fork();
-    if (cmd->pid < 0)
-    {
-        perror("fork failed");
-        exit(EXIT_FAILURE);
-    }
-    
-    if (cmd->pid == 0) 
-    {
-		setup_redirections(cmd);
-		process_heredoc(cmd);
+	if (pipe(fd) == -1)
+	{
+		perror("pipi error\n");
+		exit(127);
+	}
+	cmd->pid = fork();
+	if (cmd->pid == 0)
+	{
+		close(fd[0]);
+		dup2(fd[1], 1);
+		close(fd[1]);
+		one_cmd(cmd);
+		exit(127);
+	}
+	close(fd[1]);
+	dup2(fd[0], 0);
+	close(fd[0]);
+}
 
-        execve(find_path, cmd->execve_args, cmd->env);
-        exit(EXIT_FAILURE);
-    }
-    else 
+
+void start_cmd_part3(t_shell *cmd, char *str)
+{
+    (void)str;
+    int fd[2];
+    fd[0] = dup(0);
+    fd[1] = dup(1);
+    t_shell *temp = cmd;
+    while (cmd)
     {
-        waitpid(cmd->pid, NULL, 0); 
+        if (cmd->next)
+            pipe_exec(cmd);
+        else
+        {
+            one_cmd_2(cmd); 
+    }
+        if (cmd->next)
+            cmd->next->env = cmd->env;
+        cmd = cmd->next;
+    }
+    dup2(fd[0], 0);
+    close(fd[0]);
+    dup2(fd[1], 1);
+    close(fd[1]);
+    cmd = temp;
+    while (cmd)
+    {
+        waitpid(cmd->pid, NULL, 0);
+        cmd = cmd->next;
     }
 }
 
@@ -127,9 +185,9 @@ void start_cmd(char **env)
         else
             (void)start_parse(temp, cmd); 
 
-        join_cmd_arg(cmd); 
-        start_cmd_part3(cmd); 
-
+        join_cmd_arg(cmd);
+        
+        start_cmd_part3(cmd, temp); 
         free(temp);
         free(rcmd);
     }
