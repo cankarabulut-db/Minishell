@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:43:20 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/07 19:58:43 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/07 20:20:28 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,6 @@ void dollar_token(char *str,int i)
 				if(str[i] == '$')
 					str[i] = DOLLAR;
 				i++;
-				printf("test\n");
 			}
 		}
 		i++;
@@ -155,11 +154,9 @@ int	start_parse(char *org_str, t_shell *cmd)
 	if(quote_check(org_str) == -1)
 		return -1;
 	tokenize1(tokenized_str, org_str, 0);
-	dollar_token(org_str,0);
 	tokenize2(tokenized_str, org_str, 0);
-	tokenize3(org_str,0);
 	org_str = set_dolar(org_str, cmd); //set_dolar leaks org_str leaks
-	printf("\n%s",org_str);
+	printf("%s\n",org_str);
 	free(tokenized_str);
 	if(pipe_ba(org_str, 0) == -1)
 		return (-1);

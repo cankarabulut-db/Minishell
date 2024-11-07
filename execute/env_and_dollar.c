@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 17:21:12 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/07 19:43:26 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/07 20:56:18 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char  *get_dollar(char *org_str, int *i, t_shell *cmd)
 	char *key;
 	int temp;
 	temp = *i;
-	while (org_str[*i] && org_str[*i] != '$' && org_str[*i] != 32)
+	while (org_str[*i] && org_str[*i] != '$' && org_str[*i] != 32) // bura erör
 		(*i)++;
 	key = ft_substr(org_str, temp, *i - temp);
 	return (get_env_val(key, cmd));
