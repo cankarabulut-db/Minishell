@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahmeetkaar <ahmeetkaar@student.42.fr>      +#+  +:+       +#+        */
+/*   By: erkoc <erkoc@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:59:11 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/06 19:15:11 by ahmeetkaar       ###   ########.fr       */
+/*   Updated: 2024/11/06 20:33:50 by erkoc            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,8 @@ void one_cmd(t_shell *cmd)
 {
     int path_index = get_path_index(cmd);
     char *find_path = find_executable_path(cmd, path_index);
-	//cmd->pid = fork();
-	// if (cmd->pid == 0)
-	//{
-        execve(find_path, cmd->execve_args, cmd->env);
-		exit(0);
-	//}
+    execve(find_path, cmd->execve_args, cmd->env);
+	exit(0);
 }
 void one_cmd_2(t_shell *cmd)
 {
@@ -30,6 +26,7 @@ void one_cmd_2(t_shell *cmd)
     cmd->pid = fork();
 	if (cmd->pid == 0)
 	{
+		setup_redirections(cmd);
         execve(find_path, cmd->execve_args, cmd->env);
 		exit(0);
 	}
@@ -39,6 +36,10 @@ void struct_initializer(t_shell *cmd)
 {
 	cmd->append = NULL;
 	cmd->args = NULL;
+	cmd->ifd = -1;
+	cmd->ofd = -1;
+	cmd->status = -1;
+	cmd->status1 = -1;
 	cmd->cmd = NULL;
 	cmd->heredoc = NULL;
 	cmd->input = NULL;
@@ -119,8 +120,10 @@ void  pipe_exec(t_shell *cmd)
 	cmd->pid = fork();
 	if (cmd->pid == 0)
 	{
+		setup_redirections(cmd);
 		close(fd[0]);
-		dup2(fd[1], 1);
+		if (cmd->ofd == -1)
+			dup2(fd[1], 1);
 		close(fd[1]);
 		one_cmd(cmd);
 		exit(127);
@@ -133,22 +136,30 @@ void  pipe_exec(t_shell *cmd)
 
 void start_cmd_part3(t_shell *cmd, char *str)
 {
-    (void)str;
+	int x = 0;
+    (void)str; // kullanılmıyor kaldır buradan
     int fd[2];
     fd[0] = dup(0);
     fd[1] = dup(1);
     t_shell *temp = cmd;
     while (cmd)
     {
+		//if (x > 0)
+		//{
+    	//	dup2(fd[1], 1);
+    	//	close(fd[1]);
+		//}
+		//setup_redirections(cmd);
         if (cmd->next)
             pipe_exec(cmd);
         else
         {
             one_cmd_2(cmd); 
-    }
+    	}
         if (cmd->next)
             cmd->next->env = cmd->env;
         cmd = cmd->next;
+		x++;
     }
     dup2(fd[0], 0);
     close(fd[0]);
@@ -172,7 +183,7 @@ void start_cmd(char **env)
     while (1)
     {
         struct_initializer(cmd);
-        start_cmd_part2(cmd, &rcmd, &temp);
+        start_cmd_part2(cmd, &rcmd, &temp);// "  kk" gibi bir komut verilirse içerideki tüm boşlujları da alıp komutu tamamen alman lazım.
         
         if (!rcmd || strlen(rcmd) == 0) 
         {
@@ -183,7 +194,7 @@ void start_cmd(char **env)
         if (start_parse(temp, cmd) == -1)
             continue;
         else
-            (void)start_parse(temp, cmd); 
+           start_parse(temp, cmd); 
 
         join_cmd_arg(cmd);
         

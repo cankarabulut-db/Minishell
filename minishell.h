@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
+/*   By: erkoc <erkoc@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 16:35:09 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/01 19:48:06 by akar             ###   ########.fr       */
+/*   Updated: 2024/11/06 19:49:15 by erkoc            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@
 typedef struct s_shell
 {
 	char				*cmd;
+	int					ifd;
+	int					ofd;
 	char				**input;
 	char				**heredoc;
 	char				**output;
@@ -50,6 +52,7 @@ typedef struct s_shell
 	char				**args;
 	char				**env;
 	int					status;
+	int					status1;
 	int pid;
 	char **execve_args;
 	struct s_env		*main_env;

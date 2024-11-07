@@ -86,13 +86,25 @@ void redirects_filler(t_shell *cmd, char *str, t_rdr *count, int i)
 	start = i;
 	i = end_of_rdr(str, start);
 	if (count->ic > count->icwhile && count->type == INPUT)
-		cmd->input[count->icwhile++] = quote_remover(ft_substr(str, start, i - start), 0, 0);
+		{
+			cmd->input[count->icwhile++] = quote_remover(ft_substr(str, start, i - start), 0, 0);
+			cmd->status = INPUT;
+		}
 	else if (count->oc > count->ocwhile && count->type == OUTPUT)
-		cmd->output[count->ocwhile++] = quote_remover(ft_substr(str, start, i - start), 0, 0);
+		{
+			cmd->output[count->ocwhile++] = quote_remover(ft_substr(str, start, i - start), 0, 0);
+			cmd->status1 = OUTPUT;
+		}
 	else if (count->ac > count->acwhile && count->type == APPEND)
-		cmd->append[count->acwhile++] = quote_remover(ft_substr(str, start, i - start), 0, 0);
+		{
+			cmd->append[count->acwhile++] = quote_remover(ft_substr(str, start, i - start), 0, 0);
+			cmd->status1 = APPEND;
+		}
 	else if (count->hc > count->hcwhile && count->type == HEREDOC)
-		cmd->heredoc[count->hcwhile++] = quote_remover(ft_substr(str, start, i - start), 0, 0);
+		{
+			cmd->heredoc[count->hcwhile++] = quote_remover(ft_substr(str, start, i - start), 0, 0);
+			cmd->status = HEREDOC;
+		}
 	empty_maker(str, ' ', start, i - start);
 }
 
