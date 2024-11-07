@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: erkoc <erkoc@student.42.fr>                +#+  +:+       +#+        */
+/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:59:11 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/06 20:33:50 by erkoc            ###   ########.fr       */
+/*   Updated: 2024/11/07 19:55:32 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,28 +179,26 @@ void start_cmd(char **env)
     char *temp;
     char *rcmd;
 
-    start_cmd_part1(&cmd, env);  
+    start_cmd_part1(&cmd, env); 
     while (1)
     {
         struct_initializer(cmd);
         start_cmd_part2(cmd, &rcmd, &temp);// "  kk" gibi bir komut verilirse içerideki tüm boşlujları da alıp komutu tamamen alman lazım.
         
-        if (!rcmd || strlen(rcmd) == 0) 
+        if (!rcmd || ft_strlen(rcmd) == 0) 
         {
             free(rcmd); 
             continue;
         }
-
-        if (start_parse(temp, cmd) == -1)
-            continue;
+        if (start_parse(temp, cmd) != -1)
+        {
+			join_cmd_arg(cmd);
+			start_cmd_part3(cmd, temp); 
+			free(temp);
+			free(rcmd);
+		}
         else
-           start_parse(temp, cmd); 
-
-        join_cmd_arg(cmd);
-        
-        start_cmd_part3(cmd, temp); 
-        free(temp);
-        free(rcmd);
+           continue;
     }
 }
 

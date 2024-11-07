@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: erkoc <erkoc@student.42.fr>                +#+  +:+       +#+        */
+/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 16:35:09 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/06 19:49:15 by erkoc            ###   ########.fr       */
+/*   Updated: 2024/11/07 19:24:45 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 # include <errno.h>
 # include <string.h>
 # include "libft/libft.h"
-
+#define DOLLAR 0
 # define CHAR 1
 # define DOUBLEQ 2
 # define SINGLEQ 3
@@ -130,6 +130,10 @@ void	redirect_find_fill(t_shell *cmd, char *str, int i, t_rdr *rdrcount);
 int ft_rdrconfirmator(char redirect);
 
 
+char	*get_env_val(char *str, t_shell *cmd);
+char	**check_dolar(char *org_str, t_shell *cmd);
+char	*get_dollar(char *org_str, int *i, t_shell *cmd);
+char	*set_dolar(char *org_str, t_shell *cmd);
 ///////////// ahmet
 int get_path_index(t_shell *shell);
 void	load_env_vars(t_shell *shell, char **environment);
