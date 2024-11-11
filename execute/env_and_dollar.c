@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_and_dollar.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
+/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 17:21:12 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/11 21:18:52 by akar             ###   ########.fr       */
+/*   Updated: 2024/11/11 21:34:56 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,14 @@ char *get_env_val(char *str, t_shell *cmd)
 	while (cmd->env[i])
 	{
 		if (!ft_strncmp(cmd->env[i], str, ft_strlen(str)) && cmd->env[i][ft_strlen(str)] == '=')
-			return (ft_strchr(cmd->env[i], '=') + 1);
+		{
+			free(str);
+			return (ft_strdup(ft_strchr(cmd->env[i], '=') + 1));
+		}
 		i++;
 	}
-	return (NULL);
+	free(str);
+	return (ft_strdup(""));
 }
 
 int	check_if_same(char *s1, char *s2)
@@ -113,6 +117,30 @@ char *ft_strjoin_substr(char *s1, char *s2, int start, int len)
 	return (new);
 }
 
+void freecpointer(char **str, size_t k)
+{
+	size_t i;
+
+	i = 0;
+	if (!str)
+		return ;
+	while (i < k){
+		free(str[i]);
+		str[i] = NULL;
+		i++;
+	}
+	free(str);
+	str = NULL;
+}
+char *ft_strjoin_free(char *s1, char *s2)
+{
+	char *temp;
+
+	temp = ft_strjoin(s1, s2);
+	free(s1);
+	return (temp);
+}
+
 char *set_dolar(char *org_str, t_shell *cmd,size_t i,size_t temp)
 {
 	char **get;
@@ -132,10 +160,10 @@ char *set_dolar(char *org_str, t_shell *cmd,size_t i,size_t temp)
 		{
 			while (org_str[i] && !dol_border(org_str[i]) && org_str[i] != '?')
 				i++;
-			if (get[c] != NULL)
-				new = ft_strjoin(new, get[c++]);
+			if (get[c][0] != '\0')
+				new = ft_strjoin_free(new, get[c++]);
 			else if (get[c] == NULL && ++c)
-				new = ft_strjoin(new, "");
+				new = ft_strjoin_free(new, "");
 			if (org_str[i] == '?')
 				i++;
 		}
@@ -144,10 +172,12 @@ char *set_dolar(char *org_str, t_shell *cmd,size_t i,size_t temp)
 			i++;
 		new = ft_strjoin_substr(new,org_str, temp,  i - temp);
 	}
+	freecpointer(get, dollar_count(org_str));
 	if (ft_strlen(new) == 0)
 	{
 		free(new);
 		return (NULL);
 	}
+	free(org_str);
 	return (new); // DOLARDAN SONRA ALFANUMERİK BİRŞEY VAR İSE DOLAR YAZDIR
 }

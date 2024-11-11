@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ps_start_and_fill.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
+/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:43:20 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/11 21:14:57 by akar             ###   ########.fr       */
+/*   Updated: 2024/11/11 21:48:31 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,13 +115,19 @@ int	start_parse(char *org_str, t_shell *cmd)
 	free(tokenized_str);
 	if (org_str == NULL)
 		return (-1);
-	system("leaks minishell");
-	exit(1);
 	if(pipe_ba(org_str, 0) == -1)
 		return (-1);
 	if(struct_filler(cmd, org_str, 0) == 0) // ls | wc hatası
+	{
+		sleep(10000);
 		return (0);
+	}
 	else
+	{
+		if (cmd->cmd)
+			free(cmd->cmd);
+		
+			
 		return (-1);
-	return (0);
+	}
 }
