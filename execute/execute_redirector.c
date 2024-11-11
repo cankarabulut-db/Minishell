@@ -2,16 +2,14 @@
 
 void setup_input_redirection(t_shell *cmd)
 {
-    int i;
 
-    i = 0;
-    while (cmd->input && cmd->input[i])
-    {
-        cmd->ifd = open(cmd->input[i], O_RDONLY);
+		if (!cmd->fd_error)
+        	cmd->ifd = open(cmd->input[cmd->cur_i++], O_RDONLY);
         if (cmd->ifd < 0)
         {
+			cmd->fd_error = 1;
             perror("Error opening input file");
-            exit(EXIT_FAILURE);
+            return ;
         }
         if (dup2(cmd->ifd, STDIN_FILENO) < 0)
         {
@@ -19,22 +17,17 @@ void setup_input_redirection(t_shell *cmd)
             exit(EXIT_FAILURE);
         }
         close(cmd->ifd);
-        i++;
-    }
 }
 
 void setup_output_redirection(t_shell *cmd)
 {
-    int i;
-
-    i = 0;
-    while (cmd->output && cmd->output[i])
-    {
-        cmd->ofd = open(cmd->output[i], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (!cmd->fd_error)
+        	cmd->ofd = open(cmd->output[cmd->cur_o++], O_WRONLY | O_CREAT | O_TRUNC, 0644);
         if (cmd->ofd < 0)
         {
+			cmd->fd_error = 1;
             perror("Error opening output file");
-            exit(EXIT_FAILURE);
+            return ;
         }
         if (dup2(cmd->ofd, STDOUT_FILENO) < 0)
         {
@@ -42,22 +35,18 @@ void setup_output_redirection(t_shell *cmd)
             exit(EXIT_FAILURE);
         }
         close(cmd->ofd);
-        i++;
-    }
+
 }
 
 void setup_append_redirection(t_shell *cmd)
 {
-    int i;
-
-    i = 0;
-    while (cmd->append && cmd->append[i])
-    {
-        cmd->ofd = open(cmd->append[i], O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (!cmd->fd_error)
+        	cmd->ofd = open(cmd->append[cmd->cur_ap++], O_WRONLY | O_CREAT | O_APPEND, 0644);
         if (cmd->ofd < 0)
         {
+			cmd->fd_error = 1;
             perror("Error opening append file");//bash deki hata çıktılarını kontrol edin.
-            exit(EXIT_FAILURE); // buradan exit kalkacak yerine return atın ve diğer dosyalara dair işlem sonlanmalı. Örnek : ls > a > b > c için b dosyasında bir sorun olursa c dosyası oluşturulmamalı ve komut çalışmamalı
+            return; // buradan exit kalkacak yerine return atın ve diğer dosyalara dair işlem sonlanmalı. Örnek : ls > a > b > c için b dosyasında bir sorun olursa c dosyası oluşturulmamalı ve komut çalışmamalı
         }
         if (dup2(cmd->ofd, STDOUT_FILENO) < 0)
         {
@@ -65,23 +54,35 @@ void setup_append_redirection(t_shell *cmd)
             exit(EXIT_FAILURE);
         }
         close(cmd->ofd);
-        i++;
-    }
 }
 
 void setup_redirections(t_shell *cmd)
 {
-    setup_input_redirection(cmd);
-	if (cmd->status1 == OUTPUT)
+	int i = -1;
+
+	while (cmd->org_rdr[++i])
 	{
-    	setup_append_redirection(cmd);
-    	setup_output_redirection(cmd);
+		if (cmd->org_rdr[i] == OUTPUT)
+		{
+			setup_output_redirection(cmd);
+		}
+		else if(cmd->org_rdr[i] == INPUT && ++i)
+			setup_input_redirection(cmd);
+		else if(cmd->org_rdr[i] == APPEND && ++i)
+			setup_append_redirection(cmd);
 	}
-	if (cmd->status1 == APPEND)
-	{
-    	setup_output_redirection(cmd);
-    	setup_append_redirection(cmd);
-	}
+
+    //setup_input_redirection(cmd);
+	//if (cmd->status1 == OUTPUT)
+	//{
+    //	setup_append_redirection(cmd);
+    //	setup_output_redirection(cmd);
+	//}
+	//if (cmd->status1 == APPEND)
+	//{
+    //	setup_output_redirection(cmd);
+    //	setup_append_redirection(cmd);
+	//}
 }
 
 

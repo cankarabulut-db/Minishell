@@ -43,7 +43,7 @@ char	**split_path_directories(t_shell *shell, int path_index)
 	char	*trimmed_env;
 	char	**path_directories;
 
-	env_len = ft_strlen(shell->env[path_index]);
+	env_len = ft_strlen(shell->env[path_index]);  // ---> burada boş gelio seg yiyo
 	trimmed_env = ft_substr(shell->env[path_index], 5, env_len - 5);
 	path_directories = ft_split(trimmed_env, ':');
 	free(trimmed_env);
@@ -112,6 +112,7 @@ char	*find_executable_path(t_shell *shell, int path_index)
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(shell->cmd, 2);
 		ft_putstr_fd(": command not found\n", 2);
+		g_global_exit = 127;
 	}
 	return cmd_path;
 }

@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:59:11 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/07 19:55:32 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/09 22:20:53 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void one_cmd(t_shell *cmd)
     int path_index = get_path_index(cmd);
     char *find_path = find_executable_path(cmd, path_index);
     execve(find_path, cmd->execve_args, cmd->env);
-	exit(0);
+	exit(127);
 }
 void one_cmd_2(t_shell *cmd)
 {
@@ -28,16 +28,20 @@ void one_cmd_2(t_shell *cmd)
 	{
 		setup_redirections(cmd);
         execve(find_path, cmd->execve_args, cmd->env);
-		exit(0);
+		exit(127);
 	}
 }
 
 void struct_initializer(t_shell *cmd)
 {
+	cmd->cur_ap = 0;
+	cmd->cur_i = 0;
+	cmd->cur_o = 0;
 	cmd->append = NULL;
 	cmd->args = NULL;
 	cmd->ifd = -1;
 	cmd->ofd = -1;
+	cmd->fd_error = 0;
 	cmd->status = -1;
 	cmd->status1 = -1;
 	cmd->cmd = NULL;
@@ -111,7 +115,6 @@ void start_cmd_part2(t_shell *cmd, char **rcmd, char **temp)
 void  pipe_exec(t_shell *cmd)
 {
 	int	fd[2];
-
 	if (pipe(fd) == -1)
 	{
 		perror("pipi error\n");
@@ -136,7 +139,6 @@ void  pipe_exec(t_shell *cmd)
 
 void start_cmd_part3(t_shell *cmd, char *str)
 {
-	int x = 0;
     (void)str; // kullanılmıyor kaldır buradan
     int fd[2];
     fd[0] = dup(0);
@@ -144,22 +146,21 @@ void start_cmd_part3(t_shell *cmd, char *str)
     t_shell *temp = cmd;
     while (cmd)
     {
-		//if (x > 0)
-		//{
-    	//	dup2(fd[1], 1);
-    	//	close(fd[1]);
-		//}
-		//setup_redirections(cmd);
+		if (is_builtin(cmd->execve_args[0]))
+		{
+			execute_builtin(cmd->execve_args, cmd);
+			if (cmd->next)
+            	cmd->next->env = cmd->env;
+        	cmd = cmd->next;
+			continue ;
+		}
         if (cmd->next)
             pipe_exec(cmd);
         else
-        {
             one_cmd_2(cmd); 
-    	}
         if (cmd->next)
             cmd->next->env = cmd->env;
         cmd = cmd->next;
-		x++;
     }
     dup2(fd[0], 0);
     close(fd[0]);
@@ -180,17 +181,16 @@ void start_cmd(char **env)
     char *rcmd;
 
     start_cmd_part1(&cmd, env); 
-    while (1)
+    while (1) // -------->> "ls -l" çalışmamalı --> echo '$USER' --> "ls > a > b < c > d"  ab olsumalı d olusmamalı--> env | grep Eray çalışmıyor | 
     {
         struct_initializer(cmd);
         start_cmd_part2(cmd, &rcmd, &temp);// "  kk" gibi bir komut verilirse içerideki tüm boşlujları da alıp komutu tamamen alman lazım.
-        
         if (!rcmd || ft_strlen(rcmd) == 0) 
         {
             free(rcmd); 
             continue;
         }
-        if (start_parse(temp, cmd) != -1)
+        if (start_parse(temp, cmd) != -1) // İSDİRECTORY İS FİLE KONTROLÜ YAP
         {
 			join_cmd_arg(cmd);
 			start_cmd_part3(cmd, temp); 
@@ -206,8 +206,10 @@ int main(int ac, char *av[], char **env)
 {
     (void)av;
     if (ac != 1)
-        error_msg("Too many arguments.", 99);
-
+    {
+		error_msg("Too many arguments.", 99);
+		return (1);
+	}
     set_signal(MAIN_P);
 
     start_cmd(env);

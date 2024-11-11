@@ -6,13 +6,18 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 17:21:12 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/07 20:56:18 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/09 21:04:24 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-
+int dol_border(char a)
+{
+	if(ft_isalnum(a) || a == '_' || a == '?')
+		return (0);
+	return (1);
+}
 char *get_env_val(char *str, t_shell *cmd)
 {
 	int i;
@@ -26,12 +31,23 @@ char *get_env_val(char *str, t_shell *cmd)
 	}
 	return (NULL);
 }
+
+int	check_if_same(char *s1, char *s2)
+{
+	if (ft_strncmp(s1, s2, ft_strlen(s1)) == 0 // ahmet bunu strcmp ile düzeltirsin 51. satırda kullanıyorum
+	&& ft_strncmp(s2, s1, ft_strlen(s2)) == 0)
+		return (1);
+	return (0);
+}
+
 char  *get_dollar(char *org_str, int *i, t_shell *cmd)
 {
 	char *key;
 	int temp;
 	temp = *i;
-	while (org_str[*i] && org_str[*i] != '$' && org_str[*i] != 32) // bura erör
+	if (org_str[*i] == '?')
+		return (ft_itoa(g_global_exit));
+	while (org_str[*i] && !dol_border(org_str[*i])) // bura erör
 		(*i)++;
 	key = ft_substr(org_str, temp, *i - temp);
 	return (get_env_val(key, cmd));
@@ -66,7 +82,14 @@ char **check_dolar(char *org_str, t_shell *cmd)
 	i = 0;
 	while (org_str[i])
 	{
-		if (org_str[i++] == '$')
+		if(org_str[i] == SINGLEQ)
+			{
+				i++;
+				while(org_str[i] != SINGLEQ && org_str[i])
+					i++;
+				i++;
+			}
+		else if (org_str[i++] == '$' && (ft_isalnum(org_str[i]) || org_str[i] == '_' || org_str[i] == '?'))
 			val[dlr++] = get_dollar(org_str, &i, cmd);
 	}
 	if (dlr == 0)
@@ -78,17 +101,13 @@ char **check_dolar(char *org_str, t_shell *cmd)
 	return (val);
 }
 
-char *set_dolar(char *org_str, t_shell *cmd)
+char *set_dolar(char *org_str, t_shell *cmd,size_t i,size_t temp)
 {
 	char **get;
-	size_t i;
-	size_t temp;
 	size_t c;
 	char *new;
 
 	c = 0;
-	i = 0;
-	temp = 0;
 	get = check_dolar(org_str, cmd);
 	if (!get)
 		return (org_str);
@@ -99,12 +118,11 @@ char *set_dolar(char *org_str, t_shell *cmd)
 	{
 		if (org_str[i++] == '$')
 		{
-			while (org_str[i] && org_str[i] != '$'
-				&& org_str[i] != 32)
+			while (org_str[i] && !dol_border(org_str[i]) )
 				i++;
 			if (get[c] != NULL)
 				new = ft_strjoin(new, get[c++]);
-			if (get[c] == NULL && ++c)
+			else if (get[c] == NULL && ++c)
 				new = ft_strjoin(new, "");
 		}
 		temp = i;
@@ -112,5 +130,5 @@ char *set_dolar(char *org_str, t_shell *cmd)
 			i++;
 		new = ft_strjoin(new, ft_substr(org_str, temp, i - temp));
 	}
-	return (new);
+	return (new); // DOLARDAN SONRA ALFANUMERİK BİRŞEY VAR İSE DOLAR YAZDIR
 }

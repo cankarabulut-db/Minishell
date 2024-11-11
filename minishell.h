@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 16:35:09 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/07 20:42:43 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/09 22:40:52 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,17 @@ typedef struct s_shell
 	char				**env;
 	int					status;
 	int					status1;
-	int pid;
-	char **execve_args;
+	int					fd_error;
+	int 				pid;
+	char 				**execve_args;
+	char				*org_rdr;
 	struct s_env		*main_env;
 	struct s_shell		*next;
+
+
+	int cur_i;
+	int cur_o;
+	int cur_ap;
 }	t_shell;
 
 typedef struct s_rdr
@@ -84,9 +91,11 @@ typedef struct s_env
 	char	**env;
 }			t_env;
 
+int g_global_exit;
+
 int		ft_exist(char *str, char a, int i);	
 int		ft_strplen(char **str);
-void	split_pipe_and_fill(t_shell *cmd, char *str, int i, t_rdr *listsize);
+int	split_pipe_and_fill(t_shell *cmd, char *str, int i, t_rdr *listsize);
 int	error_msg(char *str1, int i);
 int	start_parse(char *org_str, t_shell *cmd);
 void	start_cmd(char **env);
@@ -128,12 +137,14 @@ void redirect_fill_null(t_shell *cmd,t_rdr *rc);
 void	redirects_filler(t_shell *cmd, char *str, t_rdr *count, int i);
 void	redirect_find_fill(t_shell *cmd, char *str, int i, t_rdr *rdrcount);
 int ft_rdrconfirmator(char redirect);
+int	check_if_same(char *s1, char *s2);
+
 
 
 char	*get_env_val(char *str, t_shell *cmd);
 char	**check_dolar(char *org_str, t_shell *cmd);
 char	*get_dollar(char *org_str, int *i, t_shell *cmd);
-char	*set_dolar(char *org_str, t_shell *cmd);
+char *set_dolar(char *org_str, t_shell *cmd,size_t i,size_t temp);
 ///////////// ahmet
 int get_path_index(t_shell *shell);
 void	load_env_vars(t_shell *shell, char **environment);
@@ -145,5 +156,37 @@ void process_heredoc(t_shell *cmd);
 void handle_heredoc(int status);
 void handle_sigint(int sig);
 void set_signal(int mode);
+
+//builtin
+void throw_error(char **arg);
+void if_not_null(char **arg, char *pwd, char *temppwd);
+void	if_null(char *home, t_shell *mini, char *pwd);
+void ft_cd(char **arg, t_shell *mini);
+int flag_control(char *arg);
+void echo_flag_control(char **arg, int *i);
+void echo_with_arg(char **arg);
+void ft_echo(char **arg);
+int ft_strequ(const char *s1, const char *s2);
+int find_env_index(char **env, char *var);
+char *get_env(char **env, char *var);
+void set_env(char **env, char *var, char *value);
+int init_env(t_shell *mini, char **envp);
+void ft_env(char **env, int status);
+ int str_isdigit(char *str);
+void ft_exit(char **arg);
+int find_existing_env_var(t_shell *mini, const char *identifier);
+int update_env_var(t_shell *mini, int j, const char *arg);
+int check_env(t_shell *mini, const char *identifier, const char *arg);
+int add_new_env(t_shell *mini, const char *arg, int j);
+int valid_identifier(const char *str);
+char *get_identifier(char *arg, char **equals_check);
+int identifier_error(char **arg, char *identifier, int *i);
+void mini_export_hlpr(t_shell *mini, char **arg, int i, char *identifier);
+void ft_export(t_shell *mini, char **arg, int i, char *identifier);
+void printpwd(void);
+int is_builtin(char *cmd);
+void execute_builtin(char **args, t_shell *mini);
+size_t	ft_strarrlen(char **arr);
+void	unset_env_var(char *var_name, t_shell  *mini);
 
 #endif
