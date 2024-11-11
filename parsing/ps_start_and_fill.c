@@ -6,7 +6,7 @@
 /*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:43:20 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/11 18:13:47 by akar             ###   ########.fr       */
+/*   Updated: 2024/11/11 21:14:57 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,11 +115,13 @@ int	start_parse(char *org_str, t_shell *cmd)
 	free(tokenized_str);
 	if (org_str == NULL)
 		return (-1);
+	system("leaks minishell");
+	exit(1);
 	if(pipe_ba(org_str, 0) == -1)
 		return (-1);
-	if(struct_filler(cmd, org_str, 0) == -1) // ls | wc hatası
-		return (-1);
+	if(struct_filler(cmd, org_str, 0) == 0) // ls | wc hatası
+		return (0);
 	else
-		(void)struct_filler(cmd, org_str, 0);
+		return (-1);
 	return (0);
 }

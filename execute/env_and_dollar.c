@@ -6,7 +6,7 @@
 /*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 17:21:12 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/11 20:16:54 by akar             ###   ########.fr       */
+/*   Updated: 2024/11/11 21:18:52 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,18 @@ char **check_dolar(char *org_str, t_shell *cmd)
 	return (val);
 }
 
+char *ft_strjoin_substr(char *s1, char *s2, int start, int len)
+{
+	char *new;
+	char *temp;
+
+	temp = ft_substr(s2, start, len);
+	new = ft_strjoin(s1, temp);
+	free(s1);
+	free(temp);
+	return (new);
+}
+
 char *set_dolar(char *org_str, t_shell *cmd,size_t i,size_t temp)
 {
 	char **get;
@@ -130,7 +142,7 @@ char *set_dolar(char *org_str, t_shell *cmd,size_t i,size_t temp)
 		temp = i;
 		while (org_str[i] && org_str[i] != '$')
 			i++;
-		new = ft_strjoin(new, ft_substr(org_str, temp, i - temp));
+		new = ft_strjoin_substr(new,org_str, temp,  i - temp);
 	}
 	if (ft_strlen(new) == 0)
 	{
