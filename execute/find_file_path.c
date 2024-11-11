@@ -60,19 +60,72 @@ void	free_path_directories(char **path_dirs)
 	}
 	free(path_dirs);
 }
+void error_write(char *str)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(str, 2);
+}
+
+int	runcommanderror(char **command, int i)
+{
+	if (i == 0)
+	{
+		error_write(command[0]);
+		ft_putendl_fd(": No such file or directory", 2);
+		g_global_exit = 127;
+		return (1);
+	}
+	else if (i == 1)
+	{
+		error_write(command[0]);
+		ft_putendl_fd(": Permission denied", 2);
+		g_global_exit = 126;
+		return (1);
+	}
+	else if (i == 2)
+	{
+		error_write(command[0]);
+		ft_putendl_fd(": is a directory", 2);
+		g_global_exit = 126;
+		return (1);
+	}
+	return (0);
+}
+
+int	is_file(const char *path)
+{
+	struct stat	path_stat;
+
+	if (stat(path, &path_stat) != 0)
+		return (0);
+	return (S_ISREG(path_stat.st_mode));
+}
+
+int	is_directory(const char *path)
+{
+	struct stat	statbuf;
+
+	if (stat(path, &statbuf) != 0)
+		return (0);
+	return (S_ISDIR(statbuf.st_mode));
+}
+
 char	*get_cmd_from_absolute_path(t_shell *shell)
 {
-	if (shell->cmd[0] == '/')
+
+	if (ft_strchr(shell->cmd, '/'))
 	{
+		if (is_directory(shell->cmd))
+			if (runcommanderror(&shell->cmd, 2))
+				return (NULL);
+		if (!is_file(shell->cmd))
+			if (runcommanderror(&shell->cmd, 0))
+				return (NULL);
+		if (access(shell->cmd, X_OK))
+			if (runcommanderror(&shell->cmd, 1))
+				return (NULL);
 		if (access(shell->cmd, X_OK) == 0)
 			return (ft_strdup(shell->cmd));
-		else
-		{
-			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(shell->cmd, 2);
-			ft_putstr_fd(": command not found\n", 2);
-			return NULL;
-		}
 	}
 	return NULL;
 }
@@ -85,7 +138,7 @@ char	*find_executable_in_path(t_shell *shell, int path_index)
 
 	path_dirs =  split_path_directories(shell, path_index);
 
-	while (path_dirs[index])
+	while (path_dirs && path_dirs[index])
 	{
 		joined_path = ft_strjoin(path_dirs[index], "/");
 		full_cmd_path = ft_strjoin(joined_path, shell->cmd);
@@ -105,8 +158,20 @@ char	*find_executable_path(t_shell *shell, int path_index)
 	char	*cmd_path = get_cmd_from_absolute_path(shell);
 	if (cmd_path)
 		return cmd_path;
-
-	cmd_path = find_executable_in_path(shell, path_index);
+	if (ft_strchr(shell->cmd, '/') && !cmd_path)
+		return (NULL);
+	if (path_index == -1)
+	{
+		if (!cmd_path && !access(shell->cmd, X_OK))
+			return (shell->cmd);
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(shell->cmd, 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+		g_global_exit = 127;
+		return (NULL);
+	}
+	else
+		cmd_path = find_executable_in_path(shell, path_index);
 	if (!cmd_path)
 	{
 		ft_putstr_fd("minishell: ", 2);

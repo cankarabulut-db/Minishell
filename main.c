@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:59:11 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/09 22:20:53 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/11 19:10:09 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,52 @@ void one_cmd(t_shell *cmd)
 {
     int path_index = get_path_index(cmd);
     char *find_path = find_executable_path(cmd, path_index);
+	if (is_builtin(cmd->execve_args[0]))
+	{
+		setup_redirections(cmd);
+		if (cmd->fd_error == 1)
+		{
+			exit(1);
+			return ;
+		}
+		execute_builtin(cmd->execve_args, cmd);
+		return ;
+	}
+	if (!find_path)
+		exit(g_global_exit);
     execve(find_path, cmd->execve_args, cmd->env);
 	exit(127);
 }
-void one_cmd_2(t_shell *cmd)
+void one_cmd_2(t_shell *cmd, int cmdcount)
 {
-    int path_index = get_path_index(cmd);
-    char *find_path = find_executable_path(cmd, path_index);
-    cmd->pid = fork();
-	if (cmd->pid == 0)
+    if (is_builtin(cmd->execve_args[0]) && cmdcount == 1)
 	{
 		setup_redirections(cmd);
+		if (cmd->fd_error == 1)
+		{
+			g_global_exit = 1;
+			return ;
+		}
+		execute_builtin(cmd->execve_args, cmd);
+		return ;
+	}
+    int path_index = get_path_index(cmd);
+    char *find_path;
+
+	find_path = find_executable_path(cmd, path_index); 
+	cmd->pid = fork();
+	if (cmd->pid == 0)
+	{
+		if (!find_path)
+			exit(g_global_exit);
+		setup_redirections(cmd);
+		if (cmd->fd_error == 1)
+			exit(1);
+		if (is_builtin(cmd->execve_args[0]) && cmdcount == 1)
+		{
+			execute_builtin(cmd->execve_args, cmd);
+			exit(0);
+		}
         execve(find_path, cmd->execve_args, cmd->env);
 		exit(127);
 	}
@@ -124,6 +159,8 @@ void  pipe_exec(t_shell *cmd)
 	if (cmd->pid == 0)
 	{
 		setup_redirections(cmd);
+		if (cmd->fd_error == 1)
+			exit(1);
 		close(fd[0]);
 		if (cmd->ofd == -1)
 			dup2(fd[1], 1);
@@ -136,28 +173,61 @@ void  pipe_exec(t_shell *cmd)
 	close(fd[0]);
 }
 
+void wait_childs(t_shell *cmd, int i)
+{
+	int status;
+	t_shell *temp;
+	pid_t	j;
 
+	if (i == 1 && is_builtin(cmd->cmd))
+		return ;
+	temp = cmd;
+	while (cmd)
+    {
+		signal(SIGINT, &handle_sigint);
+		j = waitpid(cmd->pid, &status, 0);
+		if (j < 0)
+			continue ;
+		if (WIFEXITED(status))
+			g_global_exit = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			g_global_exit = 128 + WTERMSIG(status);
+		cmd = cmd->next;
+    }
+	cmd = temp;
+}
+
+int cmd_counter(t_shell *cmd)
+{
+	t_shell *temp;
+	int		i;
+
+	i = 0;
+	temp = cmd;
+	while (cmd)
+	{
+		i++;
+		cmd = cmd->next;
+	}
+	cmd = temp;
+	return (i);
+}
 void start_cmd_part3(t_shell *cmd, char *str)
 {
     (void)str; // kullanılmıyor kaldır buradan
     int fd[2];
+	int cmdcount;
+
+	cmdcount = cmd_counter(cmd);
     fd[0] = dup(0);
     fd[1] = dup(1);
     t_shell *temp = cmd;
     while (cmd)
     {
-		if (is_builtin(cmd->execve_args[0]))
-		{
-			execute_builtin(cmd->execve_args, cmd);
-			if (cmd->next)
-            	cmd->next->env = cmd->env;
-        	cmd = cmd->next;
-			continue ;
-		}
         if (cmd->next)
             pipe_exec(cmd);
-        else
-            one_cmd_2(cmd); 
+		else 
+            one_cmd_2(cmd, cmdcount); 
         if (cmd->next)
             cmd->next->env = cmd->env;
         cmd = cmd->next;
@@ -166,12 +236,10 @@ void start_cmd_part3(t_shell *cmd, char *str)
     close(fd[0]);
     dup2(fd[1], 1);
     close(fd[1]);
+	cmd = temp;
+	wait_childs(cmd, cmdcount);
     cmd = temp;
-    while (cmd)
-    {
-        waitpid(cmd->pid, NULL, 0);
-        cmd = cmd->next;
-    }
+   
 }
 
 void start_cmd(char **env)
@@ -211,7 +279,7 @@ int main(int ac, char *av[], char **env)
 		return (1);
 	}
     set_signal(MAIN_P);
-
+	
     start_cmd(env);
     
     return 0;

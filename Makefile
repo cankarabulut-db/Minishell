@@ -79,5 +79,5 @@ tclean: clean
 	@echo "$(CYAN)Readline files removed$(RESET)"
 	@clear
 
-re: fclean all
+re: tclean all
 .PHONY: all clean fclean re

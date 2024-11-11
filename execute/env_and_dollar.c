@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_and_dollar.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 17:21:12 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/09 21:04:24 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/11 18:13:19 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,11 @@ char *set_dolar(char *org_str, t_shell *cmd,size_t i,size_t temp)
 		while (org_str[i] && org_str[i] != '$')
 			i++;
 		new = ft_strjoin(new, ft_substr(org_str, temp, i - temp));
+	}
+	if (ft_strlen(new) == 0)
+	{
+		free(new);
+		return (NULL);
 	}
 	return (new); // DOLARDAN SONRA ALFANUMERİK BİRŞEY VAR İSE DOLAR YAZDIR
 }

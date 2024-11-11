@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_builtin.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahmeetkaar <ahmeetkaar@student.42.fr>      +#+  +:+       +#+        */
+/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 21:11:14 by ahmeetkaar        #+#    #+#             */
-/*   Updated: 2024/11/09 00:14:38 by ahmeetkaar       ###   ########.fr       */
+/*   Updated: 2024/11/11 19:01:20 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

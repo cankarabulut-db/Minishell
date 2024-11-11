@@ -8,7 +8,12 @@ void setup_input_redirection(t_shell *cmd)
         if (cmd->ifd < 0)
         {
 			cmd->fd_error = 1;
-            perror("Error opening input file");
+            ft_putstr_fd("minishell: ", 2);
+            ft_putstr_fd(cmd->input[cmd->cur_i - 1], 2);
+            if (access(cmd->input[cmd->cur_i - 1], R_OK))
+                ft_putendl_fd(": Permission denied", 2);
+            else
+                ft_putendl_fd(": No such file or directory", 2);
             return ;
         }
         if (dup2(cmd->ifd, STDIN_FILENO) < 0)
@@ -26,7 +31,12 @@ void setup_output_redirection(t_shell *cmd)
         if (cmd->ofd < 0)
         {
 			cmd->fd_error = 1;
-            perror("Error opening output file");
+            ft_putstr_fd("minishell: ", 2);
+            ft_putstr_fd(cmd->output[cmd->cur_o - 1], 2);
+            if (access(cmd->output[cmd->cur_o - 1], W_OK))
+                ft_putendl_fd(": Permission denied", 2);
+            else
+                ft_putendl_fd(": No such file or directory", 2);
             return ;
         }
         if (dup2(cmd->ofd, STDOUT_FILENO) < 0)
@@ -42,10 +52,16 @@ void setup_append_redirection(t_shell *cmd)
 {
 		if (!cmd->fd_error)
         	cmd->ofd = open(cmd->append[cmd->cur_ap++], O_WRONLY | O_CREAT | O_APPEND, 0644);
+        dprintf(2,"%i\n",cmd->ofd);
         if (cmd->ofd < 0)
         {
 			cmd->fd_error = 1;
-            perror("Error opening append file");//bash deki hata çıktılarını kontrol edin.
+            ft_putstr_fd("minishell: ", 2);
+            ft_putstr_fd(cmd->append[cmd->cur_ap - 1], 2);
+            if (access(cmd->append[cmd->cur_ap - 1], W_OK))
+                ft_putendl_fd(": Permission denied", 2);
+            else
+                ft_putendl_fd(": No such file or directory", 2); //bash deki hata çıktılarını kontrol edin.
             return; // buradan exit kalkacak yerine return atın ve diğer dosyalara dair işlem sonlanmalı. Örnek : ls > a > b > c için b dosyasında bir sorun olursa c dosyası oluşturulmamalı ve komut çalışmamalı
         }
         if (dup2(cmd->ofd, STDOUT_FILENO) < 0)

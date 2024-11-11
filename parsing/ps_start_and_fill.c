@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ps_start_and_fill.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:43:20 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/09 23:25:32 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/11 18:13:47 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,8 @@ int	start_parse(char *org_str, t_shell *cmd)
 	tokenize2(tokenized_str, org_str, 0);
 	org_str = set_dolar(org_str, cmd,0,0); //set_dolar leaks org_str leaks
 	free(tokenized_str);
+	if (org_str == NULL)
+		return (-1);
 	if(pipe_ba(org_str, 0) == -1)
 		return (-1);
 	if(struct_filler(cmd, org_str, 0) == -1) // ls | wc hatası

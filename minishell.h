@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 16:35:09 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/09 22:40:52 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/11 17:42:04 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,6 +156,7 @@ void process_heredoc(t_shell *cmd);
 void handle_heredoc(int status);
 void handle_sigint(int sig);
 void set_signal(int mode);
+void handle_sigint(int sig);
 
 //builtin
 void throw_error(char **arg);
