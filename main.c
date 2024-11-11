@@ -6,7 +6,7 @@
 /*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:59:11 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/11 20:59:45 by akar             ###   ########.fr       */
+/*   Updated: 2024/11/11 21:12:32 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 void one_cmd(t_shell *cmd)
 {
-    int path_index = get_path_index(cmd);
-    char *find_path = find_executable_path(cmd, path_index);
 	if (is_builtin(cmd->execve_args[0]))
 	{
 		setup_redirections(cmd);
@@ -27,6 +25,8 @@ void one_cmd(t_shell *cmd)
 		execute_builtin(cmd->execve_args, cmd);
 		return ;
 	}
+    int path_index = get_path_index(cmd);
+    char *find_path = find_executable_path(cmd, path_index);
 	if (!find_path)
 		exit(g_global_exit);
     execve(find_path, cmd->execve_args, cmd->env);
