@@ -6,7 +6,7 @@
 /*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 16:35:09 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/11 17:42:04 by akar             ###   ########.fr       */
+/*   Updated: 2024/11/11 20:26:43 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,5 +189,7 @@ int is_builtin(char *cmd);
 void execute_builtin(char **args, t_shell *mini);
 size_t	ft_strarrlen(char **arr);
 void	unset_env_var(char *var_name, t_shell  *mini);
+int	is_file(const char *path);
+int	is_directory(const char *path);
 
 #endif

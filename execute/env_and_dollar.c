@@ -6,7 +6,7 @@
 /*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 17:21:12 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/11 18:13:19 by akar             ###   ########.fr       */
+/*   Updated: 2024/11/11 20:16:54 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,12 +118,14 @@ char *set_dolar(char *org_str, t_shell *cmd,size_t i,size_t temp)
 	{
 		if (org_str[i++] == '$')
 		{
-			while (org_str[i] && !dol_border(org_str[i]) )
+			while (org_str[i] && !dol_border(org_str[i]) && org_str[i] != '?')
 				i++;
 			if (get[c] != NULL)
 				new = ft_strjoin(new, get[c++]);
 			else if (get[c] == NULL && ++c)
 				new = ft_strjoin(new, "");
+			if (org_str[i] == '?')
+				i++;
 		}
 		temp = i;
 		while (org_str[i] && org_str[i] != '$')

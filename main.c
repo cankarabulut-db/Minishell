@@ -6,7 +6,7 @@
 /*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:59:11 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/11 19:10:09 by akar             ###   ########.fr       */
+/*   Updated: 2024/11/11 20:59:45 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,13 +158,12 @@ void  pipe_exec(t_shell *cmd)
 	cmd->pid = fork();
 	if (cmd->pid == 0)
 	{
+		close(fd[0]);
+		dup2(fd[1], 1);
+		close(fd[1]);
 		setup_redirections(cmd);
 		if (cmd->fd_error == 1)
 			exit(1);
-		close(fd[0]);
-		if (cmd->ofd == -1)
-			dup2(fd[1], 1);
-		close(fd[1]);
 		one_cmd(cmd);
 		exit(127);
 	}

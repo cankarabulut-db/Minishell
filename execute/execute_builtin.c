@@ -6,7 +6,7 @@
 /*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 21:11:14 by ahmeetkaar        #+#    #+#             */
-/*   Updated: 2024/11/11 19:01:20 by akar             ###   ########.fr       */
+/*   Updated: 2024/11/11 20:40:42 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void execute_builtin(char **args, t_shell *mini)
         ft_exit(args);
     else
     {
-        ft_putstr_fd("minishell: ", STDERR_FILENO);
+        ft_putstr_fd("minishell5: ", STDERR_FILENO);
         ft_putstr_fd(args[0], STDERR_FILENO);
         ft_putendl_fd(": command not found", STDERR_FILENO);
         g_global_exit = 127;

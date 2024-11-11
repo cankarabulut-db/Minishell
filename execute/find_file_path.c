@@ -71,7 +71,7 @@ int	runcommanderror(char **command, int i)
 	if (i == 0)
 	{
 		error_write(command[0]);
-		ft_putendl_fd(": No such file or directory", 2);
+		ft_putendl_fd(": No such file or directory\n", 2);
 		g_global_exit = 127;
 		return (1);
 	}
@@ -165,6 +165,7 @@ char	*find_executable_path(t_shell *shell, int path_index)
 		if (!cmd_path && !access(shell->cmd, X_OK))
 			return (shell->cmd);
 		ft_putstr_fd("minishell: ", 2);
+		
 		ft_putstr_fd(shell->cmd, 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
 		g_global_exit = 127;
