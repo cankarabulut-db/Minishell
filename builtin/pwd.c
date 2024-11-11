@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
+/*   By: ahmeetkaar <ahmeetkaar@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/21 15:59:41 by erkoc             #+#    #+#             */
-/*   Updated: 2024/11/08 20:38:21 by akar             ###   ########.fr       */
+/*   Created: 2024/11/09 17:36:26 by akar              #+#    #+#             */
+/*   Updated: 2024/11/10 17:56:39 by ahmeetkaar       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	printpwd(void)
 {
 	char	*str;
-
+	
 	str = getcwd(NULL, 0);
 	printf ("%s\n", str);
 	free (str);

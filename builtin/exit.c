@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahmeetkaar <ahmeetkaar@student.42.fr>      +#+  +:+       +#+        */
+/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/16 13:39:56 by erkoc             #+#    #+#             */
-/*   Updated: 2024/11/07 20:54:20 by ahmeetkaar       ###   ########.fr       */
+/*   Created: 2024/11/09 17:36:04 by akar              #+#    #+#             */
+/*   Updated: 2024/11/09 19:56:53 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
- int	str_isdigit(char *str)
+int	str_isdigit(char *str)
 {
 	int		i;
 	char	*temp;
