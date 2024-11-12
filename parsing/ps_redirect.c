@@ -2,7 +2,7 @@
 
 void redirect_malloc(t_shell *cmd, char *str, t_rdr *rdrc)
 {
-	redirect_size(rdrc, str);
+	redirect_size(rdrc, str, cmd);
 	if (rdrc->ic > 0)
 	{
 		cmd->input = malloc(sizeof(char *) * rdrc->ic + 1);
@@ -32,13 +32,13 @@ void redirect_malloc(t_shell *cmd, char *str, t_rdr *rdrc)
 void redirect_fill_null(t_shell *cmd, t_rdr *rc)
 {
 	if (cmd->append)
-		cmd->append[rc->ac] = NULL;
+		cmd->append[rc->ac - 1] = NULL;
 	if (cmd->heredoc)
-		cmd->heredoc[rc->hc] = NULL;
+		cmd->heredoc[rc->hc - 1] = NULL;
 	if (cmd->input)
-		cmd->input[rc->ic] = NULL;
+		cmd->input[rc->ic - 1] = NULL;
 	if (cmd->output)
-		cmd->output[rc->oc] = NULL;
+		cmd->output[rc->oc - 1] = NULL;
 }
 
 int end_of_rdr(char *str, int i)

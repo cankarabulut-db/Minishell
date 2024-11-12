@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ps_token.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
+/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:59:13 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/01 19:36:41 by akar             ###   ########.fr       */
+/*   Updated: 2024/11/12 20:50:55 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ char	*quote_remover(char *str, int i, int j)
 	{
 		while (str[i] == DOUBLEQ || str[i] == SINGLEQ)
 			i++;
+		if (!str[i])
+			break;
 		removed[j] = str[i];
 		j++;
 		i++;

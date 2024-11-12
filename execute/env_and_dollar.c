@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 17:21:12 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/11 21:34:56 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/12 20:47:54 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ char *set_dolar(char *org_str, t_shell *cmd,size_t i,size_t temp)
 				i++;
 			if (get[c][0] != '\0')
 				new = ft_strjoin_free(new, get[c++]);
-			else if (get[c] == NULL && ++c)
+			else if (!get[c][0] && ++c)
 				new = ft_strjoin_free(new, "");
 			if (org_str[i] == '?')
 				i++;
@@ -170,7 +170,7 @@ char *set_dolar(char *org_str, t_shell *cmd,size_t i,size_t temp)
 		temp = i;
 		while (org_str[i] && org_str[i] != '$')
 			i++;
-		new = ft_strjoin_substr(new,org_str, temp,  i - temp);
+		new = ft_strjoin_substr(new, org_str, temp,  i - temp);
 	}
 	freecpointer(get, dollar_count(org_str));
 	if (ft_strlen(new) == 0)
@@ -178,6 +178,5 @@ char *set_dolar(char *org_str, t_shell *cmd,size_t i,size_t temp)
 		free(new);
 		return (NULL);
 	}
-	free(org_str);
 	return (new); // DOLARDAN SONRA ALFANUMERİK BİRŞEY VAR İSE DOLAR YAZDIR
 }

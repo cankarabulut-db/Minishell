@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:05:51 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/09 23:05:27 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/12 20:49:38 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ char	*quote_remover1(char *str, int i, int j) // bunu düzenle hallet
 	{
 		while (str[i] == DOUBLEQ || str[i] == SINGLEQ)
 			i++;
+		if (!str[i])
+			break;
 		removed[j] = str[i];
 		j++;
 		i++;

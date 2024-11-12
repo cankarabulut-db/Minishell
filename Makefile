@@ -5,7 +5,7 @@ SRC = main.c parsing/ps_token.c parsing/ps_control.c parsing/ps_start_and_fill.c
 		builtin/env.c builtin/exit.c builtin/unset.c 
 
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra -g 
+CFLAGS = -Wall -Werror -Wextra -g -fsanitize=address
 RM = rm -rf
 LIBFT = libft/libft.a
 READLINE = readline

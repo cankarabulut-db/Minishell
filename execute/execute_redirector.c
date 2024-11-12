@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_redirector.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
+/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 19:44:43 by akar              #+#    #+#             */
-/*   Updated: 2024/11/11 20:58:46 by akar             ###   ########.fr       */
+/*   Updated: 2024/11/12 21:09:00 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ void fderror(char *str)
 }
 void setup_input_redirection(t_shell *cmd)
 {
-        if (!cmd->fd_error && !cmd->input[cmd->cur_i])
+        if (!cmd->fd_error && !cmd->input && !cmd->input[cmd->cur_i])
             return ;
-		if (!cmd->fd_error)
+		if (!cmd->fd_error && cmd->input && cmd->input[cmd->cur_i])
         	cmd->ifd = open(cmd->input[cmd->cur_i++], O_RDONLY);
         if (cmd->ifd < 0)
         {

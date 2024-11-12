@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
+/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 16:35:09 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/11 20:26:43 by akar             ###   ########.fr       */
+/*   Updated: 2024/11/12 21:09:20 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,21 @@
 # define CHILD_P 10
 # define HEREDOC_P 11 
 
+
+typedef struct s_rdr
+{
+	int	ic;
+	int	oc;
+	int	ac;
+	int	hc;
+	int	icwhile;
+	int	ocwhile;
+	int	acwhile;
+	int	hcwhile;
+	int	type;
+	int	listsize;
+}	t_rdr;
+
 typedef struct s_shell
 {
 	char				*cmd;
@@ -60,25 +75,10 @@ typedef struct s_shell
 	struct s_env		*main_env;
 	struct s_shell		*next;
 
-
 	int cur_i;
 	int cur_o;
 	int cur_ap;
 }	t_shell;
-
-typedef struct s_rdr
-{
-	int	ic;
-	int	oc;
-	int	ac;
-	int	hc;
-	int	icwhile;
-	int	ocwhile;
-	int	acwhile;
-	int	hcwhile;
-	int	type;
-	int	listsize;
-}	t_rdr;
 
 typedef struct s_garbage
 {
@@ -131,7 +131,7 @@ void make_empty(char *str,int i);
 void redirect_fill_null(t_shell *cmd,t_rdr *rc);
 int check_redirect(char *pipe_cmd);
 int is_quote(char a);
-void redirect_size(t_rdr *rdrc, char *str);
+void redirect_size(t_rdr *rdrc, char *str, t_shell *cmd);
 void	redirect_malloc(t_shell *cmd, char *str, t_rdr *rdrc);
 void redirect_fill_null(t_shell *cmd,t_rdr *rc);
 void	redirects_filler(t_shell *cmd, char *str, t_rdr *count, int i);
