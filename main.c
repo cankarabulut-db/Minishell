@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:59:11 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/12 20:39:48 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/13 19:06:19 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,7 +254,7 @@ void start_cmd(char **env)
         start_cmd_part2(cmd, &rcmd, &temp);// "  kk" gibi bir komut verilirse içerideki tüm boşlujları da alıp komutu tamamen alman lazım.
         if (!rcmd || ft_strlen(rcmd) == 0) 
         {
-            free(rcmd); 
+            free(rcmd);
             continue;
         }
         if (start_parse(temp, cmd) != -1) // İSDİRECTORY İS FİLE KONTROLÜ YAP

@@ -133,7 +133,4 @@ void redirect_find_fill(t_shell *cmd, char *str, int i, t_rdr *rdrcount)
 		}
 		i++;
 	}
-	cmd->cur_ap = 0;
-	cmd->cur_i = 0;
-	cmd->cur_o = 0;
 }

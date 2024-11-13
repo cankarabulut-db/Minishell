@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:43:20 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/12 21:01:58 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/13 19:42:33 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int	split_pipe_and_fill(t_shell *cmd, char *str, int i, t_rdr *listsize)
 		}
 		cmd->next = malloc(sizeof(t_shell));
 		cmd = cmd->next;
+		struct_initializer(cmd);
 		i++;
 	}
 	cmd = temp;

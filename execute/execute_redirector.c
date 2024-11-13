@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 19:44:43 by akar              #+#    #+#             */
-/*   Updated: 2024/11/12 21:09:00 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/13 20:12:53 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,11 @@ void fderror(char *str)
 }
 void setup_input_redirection(t_shell *cmd)
 {
-        if (!cmd->fd_error && !cmd->input && !cmd->input[cmd->cur_i])
+        if (cmd->fd_error && !cmd->input && !cmd->input[cmd->cur_i])
             return ;
-		if (!cmd->fd_error && cmd->input && cmd->input[cmd->cur_i])
-        	cmd->ifd = open(cmd->input[cmd->cur_i++], O_RDONLY);
+			
+        cmd->ifd = open(cmd->input[cmd->cur_i], O_RDONLY);
+		cmd->cur_i++;
         if (cmd->ifd < 0)
         {
 			cmd->fd_error = 1;
@@ -47,7 +48,7 @@ void setup_input_redirection(t_shell *cmd)
 
 void setup_output_redirection(t_shell *cmd)
 {
-        if (!cmd->fd_error && !cmd->output[cmd->cur_o])
+        if (!cmd->fd_error && !cmd->output && !cmd->output[cmd->cur_o])
             return ;
 		if (!cmd->fd_error)
         	cmd->ofd = open(cmd->output[cmd->cur_o++], O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -65,14 +66,13 @@ void setup_output_redirection(t_shell *cmd)
 
 void setup_append_redirection(t_shell *cmd)
 {
-        if (!cmd->fd_error && !cmd->append[cmd->cur_ap])
+        if (!cmd->fd_error && !cmd->append && !cmd->append[cmd->cur_ap])
             return ;
 		if (!cmd->fd_error)
         	cmd->ofd = open(cmd->append[cmd->cur_ap++], O_WRONLY | O_CREAT | O_APPEND, 0644);
         if (cmd->ofd < 0)
         {
 			cmd->fd_error = 1;
-            dprintf(2,"append: %s\n",cmd->append[cmd->cur_ap - 1]);
             fderror(cmd->append[cmd->cur_ap - 1]); //bash deki hata çıktılarını kontrol edin.
             return; // buradan exit kalkacak yerine return atın ve diğer dosyalara dair işlem sonlanmalı. Örnek : ls > a > b > c için b dosyasında bir sorun olursa c dosyası oluşturulmamalı ve komut çalışmamalı
         }
@@ -99,17 +99,9 @@ void setup_redirections(t_shell *cmd)
 		else if(cmd->org_rdr[i] == APPEND && ++i)
 			setup_append_redirection(cmd);
 	}
-    //setup_input_redirection(cmd);
-	//if (cmd->status1 == OUTPUT)
-	//{
-    //	setup_append_redirection(cmd);
-    //	setup_output_redirection(cmd);
-	//}
-	//if (cmd->status1 == APPEND)
-	//{
-    //	setup_output_redirection(cmd);
-    //	setup_append_redirection(cmd);
-	//}
+    cmd->cur_ap = 0;
+	cmd->cur_i = 0;
+	cmd->cur_o = 0;
 }
 
 
