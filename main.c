@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:59:11 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/13 19:06:19 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/15 22:35:15 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void one_cmd(t_shell *cmd)
 {
+
 	if (is_builtin(cmd->execve_args[0]))
 	{
 		setup_redirections(cmd);

@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:43:20 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/13 19:42:33 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/15 23:28:47 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,21 @@ void cmd_find_fill(t_shell *cmd,char *str,int i) // burda skntı var ls | wc -l
 	while(str[i] == ' ')
 		i++;
 	start = i;
-	while(str[i] != ' ' && str[i])
-		i++;
+	while(str[i])
+	{
+		if(str[i] == DOUBLEQ || str[i] == SINGLEQ)
+		{
+			i++;
+			while((str[i] != DOUBLEQ && str[i] != SINGLEQ) && str[i])
+				i++;
+			i++;
+			break;
+		}
+		else if(str[i] != ' ' && str[i])
+			i++;
+		else
+			break;
+	}
 	if(!ft_print_s(str[i]) && !ft_print_s(start))
 	{
 		cmd->cmd = quote_remover(ft_substr(str,start,i - start), 0, 0);
@@ -43,7 +56,7 @@ int	split_pipe_and_fill(t_shell *cmd, char *str, int i, t_rdr *listsize)
 		cmd->org_rdr = ft_strdup(pipe_cmd[i]);
 		if(check_redirect(pipe_cmd[i]))
 		{
-			if(heredoc_append_control(pipe_cmd[i], 0) || input_output_control(pipe_cmd[i], 0) )
+			if(heredoc_append_control(pipe_cmd[i], 0) == -1 || input_output_control(pipe_cmd[i], 0) == -1 )
 				return (-1);
 			redirect_find_fill(cmd, pipe_cmd[i], 0, listsize);
 		}
@@ -60,6 +73,7 @@ int	split_pipe_and_fill(t_shell *cmd, char *str, int i, t_rdr *listsize)
 		struct_initializer(cmd);
 		i++;
 	}
+	free_double_ptr(pipe_cmd);
 	cmd = temp;
 	return (0);
 }
@@ -70,18 +84,18 @@ int single_cmd_fill(t_shell *cmd, char *str, t_rdr *list)
 	char *dist_str; 
 
 	dist_str = ft_strdup(str);
-	cmd->org_rdr = ft_strdup(dist_str);
+	cmd->org_rdr = ft_strdup(dist_str); // org_rdr freele
 	if(check_redirect(str))
 	{
-		if(heredoc_append_control(dist_str, 0) == -1)
-			return (-1);
-		if(input_output_control(dist_str, 0) == -1)
+		if((heredoc_append_control(dist_str, 0) == -1 \
+		|| input_output_control(dist_str, 0) == -1) )
 			return (-1);
 		redirect_find_fill(cmd, dist_str, 0, list);
 	}
 	cmd_find_fill(cmd, dist_str,0);
 	args_find_fill(cmd, dist_str);
 	make_empty(dist_str,-1);
+	free(dist_str);
 	cmd->next = NULL;
 	return (0);
 }
@@ -89,7 +103,7 @@ int single_cmd_fill(t_shell *cmd, char *str, t_rdr *list)
 int	struct_filler(t_shell *cmd, char *str, int i)
 {
 	t_rdr	list;
-
+	
 	(void)i;
 	if (ft_exist(str, PIPE, 0))
 	{
@@ -120,9 +134,13 @@ int	start_parse(char *org_str, t_shell *cmd)
 	if(pipe_ba(newstr, 0) == -1)
 		return (-1);
 	if(struct_filler(cmd, newstr, 0) == 0) // ls | wc hatası
+	{
+		getchar();
 		return (0);
+	}
 	else
 	{
+		free(newstr);
 		if (cmd->cmd)
 			free(cmd->cmd);	
 		return (-1);
