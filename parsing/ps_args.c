@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:05:51 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/15 21:22:18 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/17 16:10:36 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ void args_find_fill(t_shell *cmd, char *str)
 		args_quote_passer(str,0);
 		temp = quote_remover1(str,0,0);
 		cmd->args = ft_split(temp, ' ');
+		free(temp);
 		untokenizer_args(cmd->args, 0, 0);
 	}
 	else

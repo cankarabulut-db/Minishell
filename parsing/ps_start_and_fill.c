@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:43:20 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/15 23:28:47 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/17 16:09:32 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ int single_cmd_fill(t_shell *cmd, char *str, t_rdr *list)
 	make_empty(dist_str,-1);
 	free(dist_str);
 	cmd->next = NULL;
+	getchar();
 	return (0);
 }
 
@@ -135,7 +136,6 @@ int	start_parse(char *org_str, t_shell *cmd)
 		return (-1);
 	if(struct_filler(cmd, newstr, 0) == 0) // ls | wc hatası
 	{
-		getchar();
 		return (0);
 	}
 	else
