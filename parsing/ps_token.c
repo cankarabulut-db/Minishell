@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:59:13 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/15 21:16:38 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/17 17:17:14 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	quote_check(char *str)
 	}
 	if (q_count % 2 != 0)
 	{
-		return (error_msg("QUOTE ERROR",15));
+		return (error_msg("QUOTE ERROR\n",15));
 		free(str);
 	}
 	return (0);

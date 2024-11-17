@@ -1,3 +1,4 @@
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -6,7 +7,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:59:11 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/15 22:35:15 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/17 16:59:48 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,9 +213,27 @@ int cmd_counter(t_shell *cmd)
 	cmd = temp;
 	return (i);
 }
+void free_structs(t_shell *cmd)
+{
+	if(cmd->input)
+		free_double_ptr(cmd->input);
+	if(cmd->append)
+		free_double_ptr(cmd->append);
+	if(cmd->output)
+		free_double_ptr(cmd->output);
+	if(cmd->heredoc)
+		free_double_ptr(cmd->heredoc);
+	if(cmd->args)
+		free_double_ptr(cmd->args);
+	if(cmd->org_rdr)
+		free(cmd->org_rdr);
+	if(cmd->execve_args)
+		free_double_ptr(cmd->execve_args);
+	free(cmd->cmd);
+}
 void start_cmd_part3(t_shell *cmd, char *str)
 {
-    (void)str; // kullanılmıyor kaldır buradan
+    (void)str;
     int fd[2];
 	int cmdcount;
 
@@ -239,7 +258,8 @@ void start_cmd_part3(t_shell *cmd, char *str)
 	cmd = temp;
 	wait_childs(cmd, cmdcount);
     cmd = temp;
-   
+	
+	
 }
 
 void start_cmd(char **env)
@@ -262,6 +282,7 @@ void start_cmd(char **env)
         {
 			join_cmd_arg(cmd);
 			start_cmd_part3(cmd, temp); 
+			free_structs(cmd);
 			free(temp);
 			free(rcmd);
 		}

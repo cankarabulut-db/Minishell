@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:43:20 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/17 16:09:32 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/17 18:10:39 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@ int single_cmd_fill(t_shell *cmd, char *str, t_rdr *list)
 	make_empty(dist_str,-1);
 	free(dist_str);
 	cmd->next = NULL;
-	getchar();
 	return (0);
 }
 
@@ -118,26 +117,36 @@ int	struct_filler(t_shell *cmd, char *str, int i)
 	}
 	return (0);
 }
-int	start_parse(char *org_str, t_shell *cmd)
-{
-	char	*tokenized_str;
-	char	*newstr;
 
+char *tokenized(char *org_str)
+{
+	char *tokenized_str;
+	char *new;
+	
 	tokenized_str = ft_strdup(org_str);
-	if(quote_check(org_str) == -1)
-		return -1;
 	tokenize1(tokenized_str, org_str, 0);
 	tokenize2(tokenized_str, org_str, 0);
-	newstr = set_dolar(org_str, cmd,0,0); //set_dolar leaks org_str leaks
+	
+	new = ft_strdup(org_str);
 	free(tokenized_str);
+	return (new);
+}
+int	start_parse(char *org_str, t_shell *cmd)
+{
+	char	*newstr;
+
+	if(quote_check(org_str) == -1)
+	{
+		return (-1);
+	}
+	org_str = tokenized(org_str);
+	newstr = set_dolar(org_str, cmd,0,0); //set_dolar leaks org_str leaks
 	if (newstr == NULL)
 		return (-1);
 	if(pipe_ba(newstr, 0) == -1)
 		return (-1);
 	if(struct_filler(cmd, newstr, 0) == 0) // ls | wc hatası
-	{
 		return (0);
-	}
 	else
 	{
 		free(newstr);

@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 16:35:09 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/12 21:09:20 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/17 16:46:48 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,8 @@ typedef struct s_shell
 	int					status1;
 	int					fd_error;
 	int 				pid;
-	char 				**execve_args;
-	char				*org_rdr;
+	char 				**execve_args; 
+	char				*org_rdr; 
 	struct s_env		*main_env;
 	struct s_shell		*next;
 
