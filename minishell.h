@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 11:10:09 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/19 11:44:03 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/19 19:15:31 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ typedef struct s_env
 	char	**env;
 }			t_env;
 
+int		ft_strequ(const char *s1, const char *s2);
 int		dol_border(char a);
 size_t	dollar_count(char *org_str);
 char	*ft_strjoin_substr(char *s1, char *s2, int start, int len);

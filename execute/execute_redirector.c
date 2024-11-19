@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 19:44:43 by akar              #+#    #+#             */
-/*   Updated: 2024/11/19 15:32:51 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/19 20:11:15 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,7 @@ void	fderror(char *str)
 		ft_putstr_fd(": Permission denied\n", 2);
 	g_global_exit = 1;
 }
-void setup_heredoc_redirection(t_shell *cmd)
-{
-	(void)cmd;
-	printf("setupheredoc\n");
-}
+
 
 void	setup_redirections(t_shell *cmd)
 {
@@ -45,8 +41,6 @@ void	setup_redirections(t_shell *cmd)
 			setup_input_redirection(cmd);
 		else if (cmd->org_rdr[i] == APPEND && ++i)
 			setup_append_redirection(cmd);
-		else if(cmd->org_rdr[i] == HEREDOC && ++i)
-			setup_heredoc_redirection(cmd);
 	}
 	cmd->cur_ap = 0;
 	cmd->cur_i = 0;
@@ -71,7 +65,7 @@ void	read_heredoc_input(int fd)
 	input_line = NULL;
 	while (getline(&input_line, &len, stdin) != -1)
 	{
-		if (strcmp(input_line, "EOF\n") == 0)
+		if (ft_strequ(input_line, "EOF\n") == 0)
 			break ;
 		write(fd, input_line, ft_strlen(input_line));
 	}
