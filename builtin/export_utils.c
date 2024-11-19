@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-	int	find_existing_env_var(t_shell *mini, const char *identifier)
+int	find_existing_env_var(t_shell *mini, const char *identifier)
 {
 	int		j;
 	size_t	len;
@@ -34,7 +34,7 @@
 	return (-1);
 }
 
-	int	update_env_var(t_shell *mini, int j, const char *arg)
+int	update_env_var(t_shell *mini, int j, const char *arg)
 {
 	char	*new_env_var;
 

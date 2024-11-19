@@ -12,9 +12,9 @@
 
 #include "../minishell.h"
 
-int valid_identifier(const char *str)
+int	valid_identifier(const char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!str || (!ft_isalpha(str[0]) && str[0] != '_'))
@@ -27,14 +27,15 @@ int valid_identifier(const char *str)
 			return (0);
 		i++;
 	}
-	if ((str[i] == '=' && str[i + 1] == '\0') || (str[i] == '=' && str[i + 1] != '\0'))
+	if ((str[i] == '=' && str[i + 1] == '\0') \
+		|| (str[i] == '=' && str[i + 1] != '\0'))
 		return (0);
 	return (1);
 }
 
-char *get_identifier(char *arg, char **equals_check)
+char	*get_identifier(char *arg, char **equals_check)
 {
-	char *identifier;
+	char	*identifier;
 
 	*equals_check = ft_strchr(arg, '=');
 	identifier = ft_substr(arg, 0, *equals_check - arg);
@@ -46,7 +47,7 @@ char *get_identifier(char *arg, char **equals_check)
 	return (identifier);
 }
 
-int identifier_error(char **arg, char *identifier, int *i)
+int	identifier_error(char **arg, char *identifier, int *i)
 {
 	if (!identifier)
 	{
@@ -60,33 +61,33 @@ int identifier_error(char **arg, char *identifier, int *i)
 	return (EXIT_SUCCESS);
 }
 
-void mini_export_hlpr(t_shell *mini, char **arg, int i, char *identifier)
+void	mini_export_hlpr(t_shell *mini, char **arg, int i, char *identifier)
 {
 	if (!check_env(mini, identifier, arg[i]))
 	{
 		if (!add_new_env(mini, arg[i], 0))
 		{
 			free(identifier);
-			return;
+			return ;
 		}
 	}
 	free(identifier);
 }
 
-void ft_export(t_shell *mini, char **arg, int i, char *identifier)
+void	ft_export(t_shell *mini, char **arg, int i, char *identifier)
 {
-	char *equals_check;
+	char	*equals_check;
 
 	while (arg[i])
 	{
 		identifier = get_identifier(arg[i], &equals_check);
 		if (identifier_error(arg, identifier, &i))
-			continue;
+			continue ;
 		if (equals_check == NULL)
 		{
 			free(identifier);
 			i++;
-			continue;
+			continue ;
 		}
 		if (arg[i] != identifier)
 			mini_export_hlpr(mini, arg, i, identifier);

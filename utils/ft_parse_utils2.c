@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_parse_utils2.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/19 11:07:16 by nkarabul          #+#    #+#             */
+/*   Updated: 2024/11/19 11:07:17 by nkarabul         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-void redirect_size(t_rdr *rdrc, char *str, t_shell *cmd)
+void	redirect_size(t_rdr *rdrc, char *str, t_shell *cmd)
 {
 	rdrc->ic = redirect_counter(str, 0, INPUT);
 	if (rdrc->ic == 0)

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/09 13:06:27 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/11 21:43:16 by nkarabul         ###   ########.fr       */
+/*   Created: 2024/11/19 11:09:04 by nkarabul          #+#    #+#             */
+/*   Updated: 2024/11/19 11:09:06 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,27 +35,29 @@ int	pipe_ba(char *str, int i)
 			while (str[i] == ' ')
 				i++;
 			if (str[i] == '\0' || str[i] == PIPE)
-				return (error_msg(str, PIPE));
+				return (error_msg(PIPE));
 		}
 		i++;
 	}
 	i = 0;
-	if(str[0] == PIPE)
-		return (error_msg(str, PIPE));
+	if (str[0] == PIPE)
+		return (free(str), error_msg(PIPE));
 	return (0);
 }
-int ft_rdrconfirmator(char redirect)
+
+int	ft_rdrconfirmator(char redirect)
 {
-	if(redirect == INPUT)
+	if (redirect == INPUT)
 		return (1);
-	else if(redirect == OUTPUT)
+	else if (redirect == OUTPUT)
 		return (1);
-	else if(redirect == HEREDOC)
+	else if (redirect == HEREDOC)
 		return (1);
-	else if(redirect == APPEND)
+	else if (redirect == APPEND)
 		return (1);
-	return (0);	
+	return (0);
 }
+
 int	heredoc_append_control(char *str, int i)
 {
 	while (str[i])
@@ -67,16 +69,16 @@ int	heredoc_append_control(char *str, int i)
 			if (str[i] == 0 || ft_rdrconfirmator(str[i]))
 			{
 				if (ft_rdrconfirmator(str[i]))
-					return (error_msg(str, str[i]));
-				return (error_msg(str, 1));
+					return (free(str), error_msg(str[i]));
+				return (free(str), error_msg(1));
 			}
 			while (str[i] == ' ')
 				i++;
 			if (str[i] == 0 || ft_rdrconfirmator(str[i]))
 			{
 				if (ft_rdrconfirmator(str[i]))
-					return (error_msg(str, str[i]));
-				return (error_msg(str, 1));
+					return (free(str), error_msg(str[i]));
+				return (free(str), error_msg(1));
 			}
 		}
 		i++;
@@ -93,22 +95,20 @@ int	input_output_control(char *str, int i)
 			i++;
 			if (str[i] == 0 || ft_rdrconfirmator(str[i]))
 			{
-				if(ft_rdrconfirmator(str[i]))
-					return(error_msg(str, str[i]));
-				return (error_msg(str, 1));
+				if (ft_rdrconfirmator(str[i]))
+					return (free(str), error_msg(str[i]));
+				return (free(str), error_msg(1));
 			}
 			while (str[i] == ' ')
 				i++;
 			if (str[i] == 0 || ft_rdrconfirmator(str[i]))
-				{
-				if(ft_rdrconfirmator(str[i]))
-					return (error_msg(str, str[i]));
-				return (error_msg(str, 1));
-				}
+			{
+				if (ft_rdrconfirmator(str[i]))
+					return (free(str), error_msg(str[i]));
+				return (free(str), error_msg(1));
+			}
 		}
 		i++;
 	}
 	return (0);
 }
-
-

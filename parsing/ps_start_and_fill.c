@@ -5,68 +5,74 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/09 13:43:20 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/17 18:10:39 by nkarabul         ###   ########.fr       */
+/*   Created: 2024/11/19 11:09:15 by nkarabul          #+#    #+#             */
+/*   Updated: 2024/11/19 11:09:17 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-
-void cmd_find_fill(t_shell *cmd,char *str,int i) // burda skntı var ls | wc -l
+void	cmd_find_fill(t_shell *cmd, char *str, int i)
 {
-	int start;
+	int	start;
 
-	while(str[i] == ' ')
+	while (str[i] == ' ')
 		i++;
 	start = i;
-	while(str[i])
+	while (str[i])
 	{
-		if(str[i] == DOUBLEQ || str[i] == SINGLEQ)
+		if ((str[i] == DOUBLEQ || str[i] == SINGLEQ) && ++i)
 		{
-			i++;
-			while((str[i] != DOUBLEQ && str[i] != SINGLEQ) && str[i])
+			while ((str[i] != DOUBLEQ && str[i] != SINGLEQ) && str[i])
 				i++;
-			i++;
-			break;
+			while (str[i] != ' ' && str[i])
+				i++;
+			break ;
 		}
-		else if(str[i] != ' ' && str[i])
+		else if (str[i] != ' ' && str[i])
 			i++;
 		else
-			break;
+			break ;
 	}
-	if(!ft_print_s(str[i]) && !ft_print_s(start))
+	if (!ft_print_s(str[i]))
 	{
-		cmd->cmd = quote_remover(ft_substr(str,start,i - start), 0, 0);
-		empty_maker(str,' ',start,i - start);
+		cmd->cmd = quote_remover(ft_substr(str, start, i - start), 0, 0);
+		empty_maker(str, ' ', start, i - start);
 	}
 }
 
+int	spaf_extras(t_shell *cmd, char **pipe_cmd, int i, t_rdr *listsize)
+{
+	cmd->org_rdr = ft_strdup(pipe_cmd[i]);
+	if (check_redirect(pipe_cmd[i]))
+	{
+		if (heredoc_append_control(pipe_cmd[i], 0) == -1 \
+			|| input_output_control(pipe_cmd[i], 0) == -1)
+			return (-1);
+		redirect_find_fill(cmd, pipe_cmd[i], 0, listsize);
+	}
+	cmd_find_fill(cmd, pipe_cmd[i], 0);
+	args_find_fill(cmd, pipe_cmd[i]);
+	make_empty(pipe_cmd[i], -1);
+	return (0);
+}
 
 int	split_pipe_and_fill(t_shell *cmd, char *str, int i, t_rdr *listsize)
 {
 	char	**pipe_cmd;
 	t_shell	*temp;
-	
+
 	pipe_cmd = ft_split(str, PIPE);
 	listsize->listsize = ft_strplen(pipe_cmd);
 	temp = cmd;
 	while (listsize->listsize > i)
 	{
-		cmd->org_rdr = ft_strdup(pipe_cmd[i]);
-		if(check_redirect(pipe_cmd[i]))
-		{
-			if(heredoc_append_control(pipe_cmd[i], 0) == -1 || input_output_control(pipe_cmd[i], 0) == -1 )
-				return (-1);
-			redirect_find_fill(cmd, pipe_cmd[i], 0, listsize);
-		}
-		cmd_find_fill(cmd,pipe_cmd[i],0);
-		args_find_fill(cmd, pipe_cmd[i]);
-		make_empty(pipe_cmd[i],-1);
-		if(i == listsize->listsize -1)
+		if (spaf_extras(cmd, pipe_cmd, i, listsize) == -1)
+			return (-1);
+		if (i == listsize->listsize -1)
 		{
 			cmd->next = NULL;
-			break;
+			break ;
 		}
 		cmd->next = malloc(sizeof(t_shell));
 		cmd = cmd->next;
@@ -78,23 +84,22 @@ int	split_pipe_and_fill(t_shell *cmd, char *str, int i, t_rdr *listsize)
 	return (0);
 }
 
-
-int single_cmd_fill(t_shell *cmd, char *str, t_rdr *list)
+int	single_cmd_fill(t_shell *cmd, char *str, t_rdr *list)
 {
-	char *dist_str; 
+	char	*dist_str;
 
 	dist_str = ft_strdup(str);
-	cmd->org_rdr = ft_strdup(dist_str); // org_rdr freele
-	if(check_redirect(str))
+	cmd->org_rdr = ft_strdup(dist_str);
+	if (check_redirect(str))
 	{
-		if((heredoc_append_control(dist_str, 0) == -1 \
-		|| input_output_control(dist_str, 0) == -1) )
-			return (-1);
+		if ((heredoc_append_control(dist_str, 0) == -1 \
+			|| input_output_control(dist_str, 0) == -1))
+			return (free(cmd->org_rdr), -1);
 		redirect_find_fill(cmd, dist_str, 0, list);
 	}
-	cmd_find_fill(cmd, dist_str,0);
+	cmd_find_fill(cmd, dist_str, 0);
 	args_find_fill(cmd, dist_str);
-	make_empty(dist_str,-1);
+	make_empty(dist_str, -1);
 	free(dist_str);
 	cmd->next = NULL;
 	return (0);
@@ -103,55 +108,17 @@ int single_cmd_fill(t_shell *cmd, char *str, t_rdr *list)
 int	struct_filler(t_shell *cmd, char *str, int i)
 {
 	t_rdr	list;
-	
+
 	(void)i;
 	if (ft_exist(str, PIPE, 0))
 	{
-		if(split_pipe_and_fill(cmd, str, 0, &list) == -1)
+		if (split_pipe_and_fill(cmd, str, 0, &list) == -1)
 			return (-1);
 	}
 	else
 	{
-		if(single_cmd_fill(cmd, str, &list) == -1)
+		if (single_cmd_fill(cmd, str, &list) == -1)
 			return (-1);
 	}
 	return (0);
-}
-
-char *tokenized(char *org_str)
-{
-	char *tokenized_str;
-	char *new;
-	
-	tokenized_str = ft_strdup(org_str);
-	tokenize1(tokenized_str, org_str, 0);
-	tokenize2(tokenized_str, org_str, 0);
-	
-	new = ft_strdup(org_str);
-	free(tokenized_str);
-	return (new);
-}
-int	start_parse(char *org_str, t_shell *cmd)
-{
-	char	*newstr;
-
-	if(quote_check(org_str) == -1)
-	{
-		return (-1);
-	}
-	org_str = tokenized(org_str);
-	newstr = set_dolar(org_str, cmd,0,0); //set_dolar leaks org_str leaks
-	if (newstr == NULL)
-		return (-1);
-	if(pipe_ba(newstr, 0) == -1)
-		return (-1);
-	if(struct_filler(cmd, newstr, 0) == 0) // ls | wc hatası
-		return (0);
-	else
-	{
-		free(newstr);
-		if (cmd->cmd)
-			free(cmd->cmd);	
-		return (-1);
-	}
 }

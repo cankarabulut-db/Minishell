@@ -1,0 +1,5 @@
+minishell>echo hi >./outfiles/outfile01 | echo bye
+minishell: ./outfiles/outfile01: No such file or directory
+bye
+minishell>sleep 0.2
+minishell>exit

@@ -5,15 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/09 14:59:13 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/17 17:17:14 by nkarabul         ###   ########.fr       */
+/*   Created: 2024/11/19 11:09:32 by nkarabul          #+#    #+#             */
+/*   Updated: 2024/11/19 11:09:35 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// Tırnak kontorlü yapar eğer char * içerisinde açık bir tırnak varsa hata döndürür.
-int	quote_check(char *str) 
+int	quote_check(char *str)
 {
 	int		i;
 	int		q_count;
@@ -34,13 +33,12 @@ int	quote_check(char *str)
 	}
 	if (q_count % 2 != 0)
 	{
-		return (error_msg("QUOTE ERROR\n",15));
+		return (error_msg(15));
 		free(str);
 	}
 	return (0);
 }
 
-// Bu fonksiyon bir char * içerisinde bulunan tek ve çift tırnakları kaldırır ve tırnaklar olmadan bir dize döner
 char	*quote_remover(char *str, int i, int j)
 {
 	char	*removed;
@@ -48,7 +46,7 @@ char	*quote_remover(char *str, int i, int j)
 
 	strsize = ft_strlen(str);
 	removed = malloc(sizeof(char) * strsize + 1);
-	if(!removed)
+	if (!removed)
 	{
 		free(str);
 		return (NULL);
@@ -58,7 +56,7 @@ char	*quote_remover(char *str, int i, int j)
 		while (str[i] == DOUBLEQ || str[i] == SINGLEQ)
 			i++;
 		if (!str[i])
-			break;
+			break ;
 		removed[j] = str[i];
 		j++;
 		i++;
@@ -68,7 +66,6 @@ char	*quote_remover(char *str, int i, int j)
 	return (removed);
 }
 
-// Çift veya tek tırnak bulunursa bunların yerine özel sabitler kullanarak dizeyi günceller
 void	tokenize1(char *str, char *org_str, int i)
 {
 	while (str[i])
@@ -97,8 +94,7 @@ void	tokenize1(char *str, char *org_str, int i)
 	}
 }
 
-// output,input, append, heredoc veya pipe bulunursa bunların yerine özel sabitler kullanarak dizeyi günceller
-void	tokenize2(char *str, char *org_str, int i) // str free
+void	tokenize2(char *str, char *org_str, int i)
 {
 	while (str[i])
 	{
@@ -107,14 +103,14 @@ void	tokenize2(char *str, char *org_str, int i) // str free
 			org_str[i] = APPEND;
 			org_str[i + 1] = APPEND;
 			i += 2;
-			continue;
+			continue ;
 		}
 		else if (str[i] == '<' && str[i + 1] == '<')
 		{
 			org_str[i] = HEREDOC;
 			org_str[i + 1] = HEREDOC;
 			i += 2;
-			continue;
+			continue ;
 		}
 		if (str[i] == '>')
 			org_str[i] = OUTPUT;

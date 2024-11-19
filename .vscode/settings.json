@@ -1,0 +1,8 @@
+{
+	"files.associations": {
+		"sstream": "c",
+		"queue": "c",
+		"stack": "c",
+		"minishell.h": "c"
+	}
+}

@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void	unset_env_var(char *var_name, t_shell  *mini)
+void	unset_env_var(char *var_name, t_shell *mini)
 {
 	int		i;
 	int		j;
@@ -24,7 +24,8 @@ void	unset_env_var(char *var_name, t_shell  *mini)
 	i = 0;
 	while (mini->env[i])
 	{
-		if (ft_strncmp(mini->env[i], var_name, len) == 0 && mini->env[i][len] == '=')
+		if (ft_strncmp(mini->env[i], var_name, len) == 0 \
+			&& mini->env[i][len] == '=')
 		{
 			free(mini->env[i]);
 			j = i;

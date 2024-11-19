@@ -5,26 +5,28 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/10 19:16:44 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/17 16:43:49 by nkarabul         ###   ########.fr       */
+/*   Created: 2024/11/19 11:09:50 by nkarabul          #+#    #+#             */
+/*   Updated: 2024/11/19 11:09:52 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void empty_maker(char *str,char a,int start,int len)
+void	empty_maker(char *str, char a, int start, int len)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	i = start;
-	while(len + i > start && str[start])
-			str[start++] = a;
-	
+	while (len + i > start && str[start])
+		str[start++] = a;
 }
 
-void free_double_ptr(char **str)
+void	free_double_ptr(char **str)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	while (str[i])
 	{
 		free(str[i]);
@@ -34,20 +36,19 @@ void free_double_ptr(char **str)
 	free(str);
 }
 
-
-int redirect_counter(char *str,int i,int redirectType)
+int	redirect_counter(char *str, int i, int redirectType)
 {
-	int count;
+	int	count;
 
 	count = 0;
-	while(str[i])
+	while (str[i])
 	{
-		if(str[i] == redirectType && str[i+1] == redirectType)
+		if (str[i] == redirectType && str[i + 1] == redirectType)
 		{
 			count++;
-			i+=2;
+			i += 2;
 		}
-		else if(str[i] == redirectType)
+		else if (str[i] == redirectType)
 		{
 			count++;
 			i++;
@@ -57,7 +58,7 @@ int redirect_counter(char *str,int i,int redirectType)
 	return (count);
 }
 
-int check_redirect(char *pipe_cmd)
+int	check_redirect(char *pipe_cmd)
 {
 	int	i;
 
@@ -69,11 +70,11 @@ int check_redirect(char *pipe_cmd)
 	return (0);
 }
 
-int is_quote(char a)
+int	is_quote(char a)
 {
-	if(a == DOUBLEQ)
+	if (a == DOUBLEQ)
 		return (1);
-	if(a == SINGLEQ)
+	if (a == SINGLEQ)
 		return (1);
 	return (0);
 }
