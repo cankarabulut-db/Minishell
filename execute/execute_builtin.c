@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 11:08:07 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/19 16:55:07 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/19 11:08:09 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 int	ft_strcmp(const char *s1, const char *s2)
 {
-	if(!s1 || !s2)
-		return (0);
 	while (*s1 && *s2 && *s1 == *s2)
 	{
 		s1++;
@@ -68,7 +66,7 @@ void	execute_builtin(char **args, t_shell *mini)
 		unset_env_while(mini, args);
 	else if (ft_strcmp(args[0], "env") == 0)
 		ft_env(mini->env, 0);
-	else if (ft_strcmp(args[0], "exit") == 0)
+	else if (strcmp(args[0], "exit") == 0)
 		ft_exit(args);
 	else
 	{

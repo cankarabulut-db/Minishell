@@ -3,7 +3,7 @@ SRC = main.c parsing/ps_token.c parsing/ps_control.c parsing/ps_start_and_fill.c
 		utils/ft_parse_utils2.c utils/error_utils.c utils/ft_utils.c utils/ft_parse_utils.c execute/find_file_path.c execute/execute_redirector.c  \
 		execute/execute_sinyal.c execute/env_and_dollar.c execute/execute_builtin.c builtin/echo.c builtin/cd.c builtin/pwd.c builtin/export.c  builtin/export_utils.c  \
 		builtin/env.c builtin/exit.c builtin/unset.c utils/utils1.c utils/utils2.c \
-		utils/utils3.c parsing/extras.c execute/extras.c execute/extras2.c execute/extras3.c execute/execute_heredoc.c
+		utils/utils3.c parsing/extras.c execute/extras.c execute/extras2.c execute/extras3.c
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra -g
 RM = rm -rf

@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:59:11 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/19 20:20:27 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/20 15:50:46 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,20 +56,7 @@ void	start_cmd_part3(t_shell *cmd)
 	wait_childs(cmd, cmdcount);
 	cmd = temp;
 }
-void heredoc_check(t_shell *cmd,int i)
-{	t_shell *temp;
 
-	temp = cmd;
-	while(cmd)
-	{
-		if(cmd->heredoc)
-		{
-			heredoc_init(&cmd);
-		}
-		cmd = cmd->next;
-	}
-	cmd = temp;
-}
 void	start_cmd(char **env)
 {
 	t_shell	cmd;
@@ -85,12 +72,10 @@ void	start_cmd(char **env)
 		{
 			free(rcmd);
 			free(temp);
-
 			continue ;
 		}
 		if (start_parse(temp, &cmd) != -1)
 		{
-			heredoc_check(&cmd, 0);
 			join_cmd_arg(&cmd);
 			start_cmd_part3(&cmd);
 			free_structs(&cmd);

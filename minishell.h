@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 11:10:09 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/19 19:15:31 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/20 15:47:50 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,6 @@ typedef struct s_env
 	char	**env;
 }			t_env;
 
-int		ft_strequ(const char *s1, const char *s2);
 int		dol_border(char a);
 size_t	dollar_count(char *org_str);
 char	*ft_strjoin_substr(char *s1, char *s2, int start, int len);
@@ -139,7 +138,7 @@ int		is_quote(char a);
 int		check_redirect(char *pipe_cmd);
 void	tab_to_space(char *str, int i);
 void	free_double_ptr(char **str);
-void	free_list(t_shell *cmd);
+void	free_structs(t_shell *cmd);
 void	args_quote_passer(char *str, int i);
 void	untokenizer_args(char **str, int i, int j);
 void	args_find_fill(t_shell *cmd, char *str);

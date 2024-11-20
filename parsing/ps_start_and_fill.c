@@ -6,7 +6,7 @@
 /*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 11:09:15 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/19 11:09:17 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/20 15:58:47 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,27 @@ int	spaf_extras(t_shell *cmd, char **pipe_cmd, int i, t_rdr *listsize)
 	{
 		if (heredoc_append_control(pipe_cmd[i], 0) == -1 \
 			|| input_output_control(pipe_cmd[i], 0) == -1)
-			return (-1);
+			return (free(cmd->org_rdr), -1);
 		redirect_find_fill(cmd, pipe_cmd[i], 0, listsize);
 	}
 	cmd_find_fill(cmd, pipe_cmd[i], 0);
 	args_find_fill(cmd, pipe_cmd[i]);
 	make_empty(pipe_cmd[i], -1);
+	return (0);
+}
+int checkall(t_rdr *listsize, char **pipe_cmd, int i)
+{
+	int j;
+
+	j = i;
+	while (listsize->listsize > j)
+	{
+		if (check_redirect(pipe_cmd[j]))
+			if (heredoc_append_control(pipe_cmd[j], 0) == -1 \
+				|| input_output_control(pipe_cmd[j], 0) == -1)
+				return (free_double_ptr(pipe_cmd), -1);
+		j++;
+	}
 	return (0);
 }
 
@@ -64,11 +79,13 @@ int	split_pipe_and_fill(t_shell *cmd, char *str, int i, t_rdr *listsize)
 
 	pipe_cmd = ft_split(str, PIPE);
 	listsize->listsize = ft_strplen(pipe_cmd);
+	if (checkall(listsize, pipe_cmd, 0) == -1)
+		return (-1);
 	temp = cmd;
 	while (listsize->listsize > i)
 	{
 		if (spaf_extras(cmd, pipe_cmd, i, listsize) == -1)
-			return (-1);
+			return (free_double_ptr(pipe_cmd), -1);
 		if (i == listsize->listsize -1)
 		{
 			cmd->next = NULL;
@@ -76,8 +93,8 @@ int	split_pipe_and_fill(t_shell *cmd, char *str, int i, t_rdr *listsize)
 		}
 		cmd->next = malloc(sizeof(t_shell));
 		cmd = cmd->next;
-		struct_initializer(cmd);
 		i++;
+		struct_initializer(cmd);
 	}
 	free_double_ptr(pipe_cmd);
 	cmd = temp;
@@ -94,7 +111,7 @@ int	single_cmd_fill(t_shell *cmd, char *str, t_rdr *list)
 	{
 		if ((heredoc_append_control(dist_str, 0) == -1 \
 			|| input_output_control(dist_str, 0) == -1))
-			return (free(cmd->org_rdr), -1);
+			return (free(dist_str), free(cmd->org_rdr), -1);
 		redirect_find_fill(cmd, dist_str, 0, list);
 	}
 	cmd_find_fill(cmd, dist_str, 0);

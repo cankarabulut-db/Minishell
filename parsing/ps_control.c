@@ -41,7 +41,7 @@ int	pipe_ba(char *str, int i)
 	}
 	i = 0;
 	if (str[0] == PIPE)
-		return (free(str), error_msg(PIPE));
+		return (error_msg(PIPE));
 	return (0);
 }
 
@@ -69,16 +69,16 @@ int	heredoc_append_control(char *str, int i)
 			if (str[i] == 0 || ft_rdrconfirmator(str[i]))
 			{
 				if (ft_rdrconfirmator(str[i]))
-					return (free(str), error_msg(str[i]));
-				return (free(str), error_msg(1));
+					return (error_msg(str[i]));
+				return (error_msg(1));
 			}
 			while (str[i] == ' ')
 				i++;
 			if (str[i] == 0 || ft_rdrconfirmator(str[i]))
 			{
 				if (ft_rdrconfirmator(str[i]))
-					return (free(str), error_msg(str[i]));
-				return (free(str), error_msg(1));
+					return (error_msg(str[i]));
+				return (error_msg(1));
 			}
 		}
 		i++;
@@ -96,16 +96,16 @@ int	input_output_control(char *str, int i)
 			if (str[i] == 0 || ft_rdrconfirmator(str[i]))
 			{
 				if (ft_rdrconfirmator(str[i]))
-					return (free(str), error_msg(str[i]));
-				return (free(str), error_msg(1));
+					return (error_msg(str[i]));
+				return (error_msg(1));
 			}
 			while (str[i] == ' ')
 				i++;
 			if (str[i] == 0 || ft_rdrconfirmator(str[i]))
 			{
 				if (ft_rdrconfirmator(str[i]))
-					return (free(str), error_msg(str[i]));
-				return (free(str), error_msg(1));
+					return (error_msg(str[i]));
+				return (error_msg(1));
 			}
 		}
 		i++;

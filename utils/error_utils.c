@@ -33,5 +33,6 @@ int	error_msg(int i)
 		ft_putstr_fd("Malloc!\n", 2);
 	else if (i == 15)
 		ft_putstr_fd("Quote Error!\n", 2);
+	g_global_exit = 258;
 	return (-1);
 }
