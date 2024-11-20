@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_redirector.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 19:44:43 by akar              #+#    #+#             */
-/*   Updated: 2024/11/19 15:32:51 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/20 17:17:19 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,6 @@ void	fderror(char *str)
 		ft_putstr_fd(": Permission denied\n", 2);
 	g_global_exit = 1;
 }
-void setup_heredoc_redirection(t_shell *cmd)
-{
-	(void)cmd;
-	printf("setupheredoc\n");
-}
 
 void	setup_redirections(t_shell *cmd)
 {
@@ -45,8 +40,6 @@ void	setup_redirections(t_shell *cmd)
 			setup_input_redirection(cmd);
 		else if (cmd->org_rdr[i] == APPEND && ++i)
 			setup_append_redirection(cmd);
-		else if(cmd->org_rdr[i] == HEREDOC && ++i)
-			setup_heredoc_redirection(cmd);
 	}
 	cmd->cur_ap = 0;
 	cmd->cur_i = 0;
@@ -65,17 +58,18 @@ void	process_heredoc_entry(int *fd)
 void	read_heredoc_input(int fd)
 {
 	char	*input_line;
-	size_t	len;
 
-	len = 0;
-	input_line = NULL;
-	while (getline(&input_line, &len, stdin) != -1)
+	input_line = get_next_line(STDIN_FILENO);
+	while (input_line != NULL)
 	{
 		if (strcmp(input_line, "EOF\n") == 0)
+		{
+			free(input_line);
 			break ;
+		}
 		write(fd, input_line, ft_strlen(input_line));
+		free(input_line);
 	}
-	free(input_line);
 }
 
 void	process_heredoc(t_shell *cmd)

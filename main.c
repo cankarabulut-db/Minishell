@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:59:11 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/20 15:50:46 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/20 17:20:25 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,23 @@ void	start_cmd_part3(t_shell *cmd)
 	int		cmdcount;
 	t_shell	*temp;
 
+	int	heredoc_x;
 	temp = cmd;
 	cmdcount = cmd_counter(cmd);
 	fd[0] = dup(0);
 	fd[1] = dup(1);
+	heredoc_x = 0;
 	while (cmd)
 	{
+		if (heredoc_x == 0)
+			heredoc_check(cmd, fd);
 		if (cmd->next)
 			pipe_exec(cmd);
 		else
 			one_cmd_2(cmd, cmdcount);
 		if (cmd->next)
 			cmd->next->env = cmd->env;
+		heredoc_x++;
 		cmd = cmd->next;
 	}
 	dup2(fd[0], 0);
@@ -55,6 +60,20 @@ void	start_cmd_part3(t_shell *cmd)
 	cmd = temp;
 	wait_childs(cmd, cmdcount);
 	cmd = temp;
+}
+
+void heredoc_check(t_shell *shell, int fd[2])
+{
+	t_shell *temp;
+
+	temp = shell;
+    while (shell)
+    {
+        if (shell->heredoc && shell->heredoc[0])
+            heredoc_init(shell, fd);
+        shell = shell->next;
+    }
+	shell = temp;
 }
 
 void	start_cmd(char **env)

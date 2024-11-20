@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ps_token.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 11:09:32 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/19 11:09:35 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/20 17:08:48 by akar             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,4 +120,22 @@ void	tokenize2(char *str, char *org_str, int i)
 			org_str[i] = PIPE;
 		i++;
 	}
+}
+
+int	struct_filler(t_shell *cmd, char *str, int i)
+{
+	t_rdr	list;
+
+	(void)i;
+	if (ft_exist(str, PIPE, 0))
+	{
+		if (split_pipe_and_fill(cmd, str, 0, &list) == -1)
+			return (-1);
+	}
+	else
+	{
+		if (single_cmd_fill(cmd, str, &list) == -1)
+			return (-1);
+	}
+	return (0);
 }
