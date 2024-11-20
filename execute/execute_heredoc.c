@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_heredoc.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
+/*   By: ahmeetkaar <ahmeetkaar@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 17:14:41 by akar              #+#    #+#             */
-/*   Updated: 2024/11/20 17:14:54 by akar             ###   ########.fr       */
+/*   Updated: 2024/11/20 20:27:57 by ahmeetkaar       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,10 @@ void	heredoc_init(t_shell *shell, int fd_2[2])
 {
 	int	fd[2];
 	int	status;
-	int	x;
 
 	pipe(fd);
-	x = 0;
 	if (shell->heredoc && shell->heredoc[0])
-	{
 		handle_heredoc2(shell, fd, fd_2);
-		x++;
-	}
 	close(fd[1]);
 	dup2(fd[0], 0);
 	close(fd[0]);
