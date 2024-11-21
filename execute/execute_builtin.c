@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_builtin.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fuyar <fuyar@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 11:08:07 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/19 11:08:09 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/21 16:17:49 by fuyar            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	unset_env_while(t_shell *mini, char **args)
 		unset_env_var(args[i++], mini);
 }
 
-void	execute_builtin(char **args, t_shell *mini)
+void	execute_builtin(char **args, t_shell *mini, int cmd)
 {
 	if (ft_strcmp(args[0], "cd") == 0)
 		ft_cd(args, mini);
@@ -67,7 +67,7 @@ void	execute_builtin(char **args, t_shell *mini)
 	else if (ft_strcmp(args[0], "env") == 0)
 		ft_env(mini->env, 0);
 	else if (strcmp(args[0], "exit") == 0)
-		ft_exit(args);
+		ft_exit(args, mini, cmd);
 	else
 	{
 		ft_putstr_fd("minishell5: ", STDERR_FILENO);

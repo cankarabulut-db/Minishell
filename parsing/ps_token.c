@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ps_token.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
+/*   By: fuyar <fuyar@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 11:09:32 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/20 17:08:48 by akar             ###   ########.fr       */
+/*   Updated: 2024/11/21 16:43:07 by fuyar            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,20 @@ int	quote_check(char *str)
 
 	q_count = 0;
 	i = 0;
-	while (str[i])
+	c = '\0';
+	while (str && str[i])
 	{
 		if ((str[i] == '\"' || str[i] == '\'') && q_count % 2 == 0)
 		{
 			c = str[i];
 			q_count += 1;
 		}
-		else if (str[i] == c)
+		else if (c != '\0' && str[i] == c)
 			q_count++;
 		i++;
 	}
 	if (q_count % 2 != 0)
-	{
 		return (error_msg(15));
-		free(str);
-	}
 	return (0);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
+/*   By: fuyar <fuyar@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 17:36:04 by akar              #+#    #+#             */
-/*   Updated: 2024/11/09 19:56:53 by akar             ###   ########.fr       */
+/*   Updated: 2024/11/21 16:20:42 by fuyar            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,24 +31,29 @@ int	str_isdigit(char *str)
 	return (free(temp), 0);
 }
 
-void	ft_exit(char **arg)
+void	ft_exit(char **arg, t_shell *cmd, int count)
 {
 	if (arg[1])
 	{
 		if (arg[2] != NULL)
 		{
-			ft_putstr_fd("bash: exit: too many arguments\n", STDERR_FILENO);
+			ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
 			g_global_exit = 1;
 			return ;
 		}
 		if (str_isdigit(arg[1]))
 		{
-			ft_putstr_fd("bash: exit: ", STDERR_FILENO);
+			ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 			ft_putstr_fd(arg[1], STDERR_FILENO);
 			ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
 			exit(255);
 		}
 		g_global_exit = ft_atoi(arg[1]);
+	}
+	if (count == 1)
+	{
+		free_structs(cmd);
+		free_double_ptr(cmd->env);
 	}
 	printf("exit\n");
 	exit(g_global_exit);

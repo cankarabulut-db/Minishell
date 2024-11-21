@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fuyar <fuyar@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 11:07:10 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/19 14:32:31 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/21 16:19:10 by fuyar            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	one_cmd(t_shell *cmd)
 			exit(1);
 			return ;
 		}
-		execute_builtin(cmd->execve_args, cmd);
+		execute_builtin(cmd->execve_args, cmd, 1);
 		return ;
 	}
 	path_index = get_path_index(cmd);
@@ -51,7 +51,7 @@ void	oc2_child(t_shell *cmd, int cmdcount, int path_index)
 			exit(1);
 		if (is_builtin(cmd->execve_args[0]) && cmdcount == 1)
 		{
-			execute_builtin(cmd->execve_args, cmd);
+			execute_builtin(cmd->execve_args, cmd, cmdcount);
 			exit(0);
 		}
 		execve(find_path, cmd->execve_args, cmd->env);
@@ -69,7 +69,7 @@ void	one_cmd_2(t_shell *cmd, int cmdcount)
 			g_global_exit = 1;
 			return ;
 		}
-		execute_builtin(cmd->execve_args, cmd);
+		execute_builtin(cmd->execve_args, cmd, cmdcount);
 		return ;
 	}
 	oc2_child(cmd, cmdcount, get_path_index(cmd));
@@ -91,7 +91,6 @@ void	struct_initializer(t_shell *cmd)
 	cmd->cmd = NULL;
 	cmd->heredoc = NULL;
 	cmd->input = NULL;
-	cmd->main_env = NULL;
 	cmd->next = NULL;
 	cmd->output = NULL;
 }

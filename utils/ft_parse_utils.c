@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fuyar <fuyar@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 11:09:50 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/19 11:09:52 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/21 16:43:46 by fuyar            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,14 @@ void	free_double_ptr(char **str)
 	int	i;
 
 	i = 0;
-	while (str[i])
+	while (str && str[i])
 	{
 		free(str[i]);
 		str[i] = NULL;
 		i++;
 	}
-	free(str);
+	if (str)
+		free(str);
 }
 
 int	redirect_counter(char *str, int i, int redirectType)

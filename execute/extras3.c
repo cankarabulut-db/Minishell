@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   extras3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fuyar <fuyar@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 11:08:25 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/19 11:08:26 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/21 17:17:17 by fuyar            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ char	*set_dolar(char *org_str, t_shell *cmd, size_t i)
 	while (org_str[i] && org_str[i] != '$')
 		i++;
 	new = set_dollar_while(org_str, get, i);
-	freecpointer(get, dollar_count(org_str));
+	free_double_ptr(get);
 	if (ft_strlen(new) == 0)
 		return (free(new), NULL);
 	return (new);

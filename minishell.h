@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahmeetkaar <ahmeetkaar@student.42.fr>      +#+  +:+       +#+        */
+/*   By: fuyar <fuyar@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 11:10:09 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/20 20:24:26 by ahmeetkaar       ###   ########.fr       */
+/*   Updated: 2024/11/21 16:19:17 by fuyar            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ typedef struct s_shell
 	int					pid;
 	char				**execve_args;
 	char				*org_rdr;
-	struct s_env		*main_env;
 	struct s_shell		*next;
 
 	int					cur_i;
@@ -89,11 +88,6 @@ typedef struct s_garbage
 	void				*data;
 	struct s_garbage	*next;
 }						t_garbage;
-
-typedef struct s_env
-{
-	char				**env;
-}						t_env;
 
 int						dol_border(char a);
 size_t					dollar_count(char *org_str);
@@ -193,7 +187,7 @@ char					*get_env(char **env, char *var);
 void					set_env(char **env, char *var, char *value);
 void					ft_env(char **env, int status);
 int						str_isdigit(char *str);
-void					ft_exit(char **arg);
+void					ft_exit(char **arg, t_shell *cmd, int count);
 int						find_existing_env_var(t_shell *mini,
 							const char *identifier);
 int						update_env_var(t_shell *mini, int j, const char *arg);
@@ -209,7 +203,7 @@ void					ft_export(t_shell *mini, char **arg, int i,
 							char *identifier);
 void					printpwd(void);
 int						is_builtin(char *cmd);
-void					execute_builtin(char **args, t_shell *mini);
+void					execute_builtin(char **args, t_shell *mini, int cmd);
 size_t					ft_strarrlen(char **arr);
 void					unset_env_var(char *var_name, t_shell *mini);
 int						is_file(const char *path);

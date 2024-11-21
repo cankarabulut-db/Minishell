@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ps_redirect.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fuyar <fuyar@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 11:07:30 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/19 11:07:31 by nkarabul         ###   ########.fr       */
+/*   Updated: 2024/11/21 16:49:54 by fuyar            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,25 +17,25 @@ void	redirect_malloc(t_shell *cmd, char *str, t_rdr *rdrc)
 	redirect_size(rdrc, str, cmd);
 	if (rdrc->ic > 0)
 	{
-		cmd->input = malloc(sizeof(char *) * rdrc->ic + 1);
+		cmd->input = malloc(sizeof(char *) * (rdrc->ic + 1));
 		if (!cmd->input)
 			error_msg(14);
 	}
 	if (rdrc->oc > 0)
 	{
-		cmd->output = malloc(sizeof(char *) * rdrc->oc + 1);
+		cmd->output = malloc(sizeof(char *) * (rdrc->oc + 1));
 		if (!cmd->output)
 			error_msg(14);
 	}
 	if (rdrc->hc > 0)
 	{
-		cmd->heredoc = malloc(sizeof(char *) * rdrc->hc + 1);
+		cmd->heredoc = malloc(sizeof(char *) * (rdrc->hc + 1));
 		if (!cmd->heredoc)
 			error_msg(14);
 	}
 	if (rdrc->ac > 0)
 	{
-		cmd->append = malloc(sizeof(char *) * rdrc->ac + 1);
+		cmd->append = malloc(sizeof(char *) * (rdrc->ac + 1));
 		if (!cmd->append)
 			error_msg(14);
 	}
