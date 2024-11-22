@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fuyar <fuyar@student.42.fr>                +#+  +:+       +#+        */
+/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 11:10:09 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/21 16:19:17 by fuyar            ###   ########.fr       */
+/*   Updated: 2024/11/22 13:41:36 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ size_t					dollar_count(char *org_str);
 char					*ft_strjoin_substr(char *s1, char *s2, int start,
 							int len);
 void					fderror(char *str);
+void					duplicate_open_close(int *fd,int a);
 void					freecpointer(char **str, size_t k);
 void					setup_output_redirection(t_shell *cmd);
 void					setup_input_redirection(t_shell *cmd);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akar <akar@student.42istanbul.com.tr>      +#+  +:+       +#+        */
+/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:59:11 by nkarabul          #+#    #+#             */
-/*   Updated: 2024/11/20 17:20:25 by akar             ###   ########.fr       */
+/*   Updated: 2024/11/22 13:43:08 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,14 @@ void	free_structs(t_shell *cmd)
 
 void	start_cmd_part3(t_shell *cmd)
 {
+	t_shell	*temp;
 	int		fd[2];
 	int		cmdcount;
-	t_shell	*temp;
+	int		heredoc_x;
 
-	int	heredoc_x;
 	temp = cmd;
 	cmdcount = cmd_counter(cmd);
-	fd[0] = dup(0);
-	fd[1] = dup(1);
+	duplicate_open_close(fd, 1);
 	heredoc_x = 0;
 	while (cmd)
 	{
@@ -53,26 +52,22 @@ void	start_cmd_part3(t_shell *cmd)
 		heredoc_x++;
 		cmd = cmd->next;
 	}
-	dup2(fd[0], 0);
-	close(fd[0]);
-	dup2(fd[1], 1);
-	close(fd[1]);
+	duplicate_open_close(fd, 2);
 	cmd = temp;
 	wait_childs(cmd, cmdcount);
-	cmd = temp;
 }
 
-void heredoc_check(t_shell *shell, int fd[2])
+void	heredoc_check(t_shell *shell, int fd[2])
 {
-	t_shell *temp;
+	t_shell	*temp;
 
 	temp = shell;
-    while (shell)
-    {
-        if (shell->heredoc && shell->heredoc[0])
-            heredoc_init(shell, fd);
-        shell = shell->next;
-    }
+	while (shell)
+	{
+		if (shell->heredoc && shell->heredoc[0])
+			heredoc_init(shell, fd);
+		shell = shell->next;
+	}
 	shell = temp;
 }
 
