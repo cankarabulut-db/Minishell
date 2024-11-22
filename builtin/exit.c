@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fuyar <fuyar@student.42.fr>                +#+  +:+       +#+        */
+/*   By: nkarabul <nkarabul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 17:36:04 by akar              #+#    #+#             */
-/*   Updated: 2024/11/21 16:20:42 by fuyar            ###   ########.fr       */
+/*   Updated: 2024/11/22 15:08:05 by nkarabul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ void	ft_exit(char **arg, t_shell *cmd, int count)
 	{
 		if (arg[2] != NULL)
 		{
-			ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
+			ft_putstr_fd("minishell: exit: too many arguments\n",
+				STDERR_FILENO);
 			g_global_exit = 1;
 			return ;
 		}

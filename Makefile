@@ -29,8 +29,7 @@ WHITE=\033[37m
 GREY=\033[90m
 LIGHT_GREY=\033[37m
 
-all : $(READLINE) $(LIBFT) $(NAME) tclean
-	./minishell
+all : $(READLINE) $(LIBFT) $(NAME)
 
 $(READLINE):
 	@clear
@@ -74,10 +73,5 @@ fclean: clean
 	@echo "$(CYAN)Readline files removed$(RESET)"
 	@clear
 
-tclean: clean 
-	@make -C libft fclean
-	@echo "$(CYAN)Readline files removed$(RESET)"
-	@clear
-
-re: tclean all
+re: fclean all
 .PHONY: all clean fclean re
